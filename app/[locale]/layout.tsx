@@ -28,9 +28,8 @@ export default function RootLayout({ children }: RootLayoutProps) {
 
             <div className="layout__container">
               {children}
-
-     
             </div>
+            
           </Providers>
         </NextIntlProvider>
       </body>
