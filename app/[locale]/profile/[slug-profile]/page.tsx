@@ -1,11 +1,11 @@
 'use client';
 import { useParams } from "next/navigation";
 
-import { MyProfileLayout, MyProfileBody } from '@/components';
+import { ProfileLayout, ProfileBody } from '@/components/profile';
 
 
 
-export default function MyProfilePage() {
+export default function ProfilePage() {
   const params = useParams();
 
   const slug =
@@ -16,8 +16,8 @@ export default function MyProfilePage() {
         : "";
 
   return (
-    <MyProfileLayout>
-      <MyProfileBody slug={ slug } />
-    </MyProfileLayout>
+    <ProfileLayout>
+      <ProfileBody slug={ slug } />
+    </ProfileLayout>
   );
 }
