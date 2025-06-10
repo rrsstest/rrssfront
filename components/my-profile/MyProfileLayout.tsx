@@ -2,7 +2,7 @@
 
 import { AuthGate } from "../auth";
 
-export const HomeLayout = ( { children }: { children?: React.ReactNode; } ) => {
+export const MyProfileLayout = ( { children }: { children?: React.ReactNode; } ) => {
   return (
     <AuthGate>
       <div className="admin-layout min-h-screen">

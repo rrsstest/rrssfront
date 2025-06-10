@@ -1,9 +1,12 @@
 import { metadataHome } from "./meta";
-
-import { HomeLayout } from "@/components";
+import { HomeBody, HomeLayout } from "@/components";
 
 export const metadata = metadataHome;
 
 export default function Page() {
-  return <HomeLayout />;
+  return (
+    <HomeLayout>
+      <HomeBody />
+    </HomeLayout>
+  );
 }
