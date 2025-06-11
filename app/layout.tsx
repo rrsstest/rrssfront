@@ -9,10 +9,12 @@ import { siteConfig } from "@/config/site";
 import { fontSans } from "@/config/fonts";
 import { Navbar } from "@/components/navbar";
 
+
+
 export const metadata: Metadata = {
   title: {
     default: siteConfig.name,
-    template: `%s - ${siteConfig.name}`,
+    template: `%s - ${ siteConfig.name }`,
   },
   description: siteConfig.description,
   icons: {
@@ -27,25 +29,25 @@ export const viewport: Viewport = {
   ],
 };
 
-export default function RootLayout({
+export default function RootLayout( {
   children,
 }: {
   children: React.ReactNode;
-}) {
+} ) {
   return (
     <html suppressHydrationWarning lang="en">
       <head />
       <body
-        className={clsx(
+        className={ clsx(
           "min-h-screen text-foreground bg-background font-sans antialiased",
           fontSans.variable,
-        )}
+        ) }
       >
-        <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
+        <Providers themeProps={ { attribute: "class", defaultTheme: "dark" } }>
           <div className="relative flex flex-col h-screen">
             <Navbar />
             <main className="container mx-auto max-w-7xl pt-16 px-6 flex-grow">
-              {children}
+              { children }
             </main>
             <footer className="w-full flex items-center justify-center py-3">
               <Link
@@ -54,8 +56,7 @@ export default function RootLayout({
                 href="https://heroui.com?utm_source=next-app-template"
                 title="heroui.com homepage"
               >
-                <span className="text-default-600">Powered by</span>
-                <p className="text-primary">HeroUI</p>
+                <span className="text-default-600">RRSS</span>
               </Link>
             </footer>
           </div>
