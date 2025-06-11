@@ -41,11 +41,12 @@ export default function RootLayout( {
           "min-h-screen text-foreground bg-background font-sans antialiased",
           fontSans.variable,
         ) }
+        suppressHydrationWarning={ true }
       >
         <Providers themeProps={ { attribute: "class", defaultTheme: "dark" } }>
           <div className="relative flex flex-col h-screen">
             <Navbar />
-            <main className="container mx-auto max-w-7xl pt-16 px-6 flex-grow">
+            <main className="container mx-auto pt-16 px-6 flex-grow">
               { children }
             </main>
           </div>
