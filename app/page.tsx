@@ -42,6 +42,7 @@ export default function Home() {
           selectionMode="none"
           hideIndicator
           cardClassName="w-full max-w-xs"
+          icon="https://i.imgur.com/HRFutJ3.png"
         />
         <GenericList
           title="Grupos explorados"
@@ -49,6 +50,7 @@ export default function Home() {
           selectionMode="none"
           hideIndicator
           cardClassName="w-full max-w-xs"
+          icon="https://i.imgur.com/pDuOFX8.png"
         />
       </div>
       <div className="order-3 md:order-none md:col-span-3 flex justify-center items-start flex-col space-y-5">
@@ -62,7 +64,7 @@ export default function Home() {
         <PostContainer />
 
         <PostContainer />
-        
+
       </div>
       <div className="order-2 md:order-none md:col-span-2 flex justify-center items-start mt-12">
         <GenericList
@@ -71,6 +73,7 @@ export default function Home() {
           selectionMode="none"
           hideIndicator
           cardClassName="w-full max-w-xs"
+          icon="https://i.imgur.com/82GBaWF.png"
         />
       </div>
     </section>

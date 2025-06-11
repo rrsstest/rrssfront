@@ -2,6 +2,7 @@
 import { Accordion, AccordionItem } from "@heroui/accordion";
 import { Avatar } from "@heroui/avatar";
 import { Card, CardBody, CardHeader } from "@heroui/card";
+import { Image } from "@heroui/image";
 import clsx from "clsx";
 
 import { IGenericList } from './interfaces';
@@ -17,6 +18,7 @@ export function GenericList( {
   title = "Lista",
   items,
   selectionMode = "none",
+  icon = ""
 }: IGenericList ) {
   return (
     <Card
@@ -25,7 +27,14 @@ export function GenericList( {
       shadow="sm"
     >
       { title && (
-        <CardHeader className={ headerClassName ?? "flex justify-center" }>
+        <CardHeader className={ headerClassName ?? "flex justify-center flex-col" }>
+          <Image
+            alt="heroui logo"
+            height={ 40 }
+            radius="sm"
+            src={ icon }
+            width={ 40 }
+          />
           <h1 className="text-xl">{ title }</h1>
         </CardHeader>
       ) }

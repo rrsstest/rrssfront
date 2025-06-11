@@ -11,11 +11,12 @@ export interface IUserItemList {
 }
 
 export interface IGenericList {
-  cardClassName?:         string;
-  headerClassName?:       string;
-  bodyClassName?:         string;
   accordionClassName?:    string;
   accordionItemClassName?:string;
+  bodyClassName?:         string;
+  cardClassName?:         string;
+  headerClassName?:       string;
+  icon:                   string;
   hideIndicator?:         boolean;
   title?:                 ReactNode;
   items:                  IUserItemList[];
