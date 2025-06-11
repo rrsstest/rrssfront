@@ -5,7 +5,7 @@ import { Link } from '@heroui/link';
 
 export const PostContainer = () => {
   return (
-    <Card className="w-full max-w-3xl flex flex-col">
+    <Card className="w-full max-w-3xl flex flex-col" isBlurred>
       <CardHeader className="flex gap-3">
         <Image
           alt="heroui logo"
