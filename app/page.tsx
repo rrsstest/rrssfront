@@ -34,47 +34,62 @@ const users: IUserItemList[] = [
 
 export default function Home() {
   return (
-    <section className="grid grid-cols-1 md:grid-cols-7 min-h-screen pb-4 pt-4">
-      <div className="order-1 md:order-none md:col-span-2 flex flex-col gap-y-8 items-start mt-12">
-        <GenericList
-          title="Grupos"
-          items={ users }
-          selectionMode="none"
-          hideIndicator
-          cardClassName="w-full max-w-xs"
-          icon="https://i.imgur.com/HRFutJ3.png"
-        />
-        <GenericList
-          title="Grupos explorados"
-          items={ users }
-          selectionMode="none"
-          hideIndicator
-          cardClassName="w-full max-w-xs"
-          icon="https://i.imgur.com/pDuOFX8.png"
-        />
+    <section className="
+      flex
+      justify-center
+      w-full
+      min-h-screen
+      pt-8
+      pb-8
+      gap-10
+      xl:gap-16
+      px-2
+      bg-background
+    ">
+      {/* IZQUIERDA */ }
+      <div className="hidden xl:flex flex-col justify-start items-end gap-8 flex-shrink-0 pt-6">
+        <div className="w-[320px]">
+          <GenericList
+            title="Grupos"
+            items={ users }
+            selectionMode="none"
+            hideIndicator
+            cardClassName="w-full"
+            icon="https://i.imgur.com/HRFutJ3.png"
+          />
+        </div>
+        <div className="w-[320px]">
+          <GenericList
+            title="Grupos explorados"
+            items={ users }
+            selectionMode="none"
+            hideIndicator
+            cardClassName="w-full"
+            icon="https://i.imgur.com/pDuOFX8.png"
+          />
+        </div>
       </div>
-      <div className="order-3 md:order-none md:col-span-3 flex justify-center items-start flex-col space-y-5">
 
+      {/* FEED CENTRAL */ }
+      <div className="flex flex-col items-center gap-8 w-full max-w-3xl mx-auto">
         <PostContainer />
-
         <PostContainer />
-
         <PostContainer />
-
         <PostContainer />
-
-        <PostContainer />
-
       </div>
-      <div className="order-2 md:order-none md:col-span-2 flex justify-center items-start mt-12">
-        <GenericList
-          title="Publicaciones"
-          items={ users }
-          selectionMode="none"
-          hideIndicator
-          cardClassName="w-full max-w-xs"
-          icon="https://i.imgur.com/82GBaWF.png"
-        />
+
+      {/* DERECHA */ }
+      <div className="hidden xl:flex flex-col justify-start items-start pt-6 flex-shrink-0">
+        <div className="w-[320px]">
+          <GenericList
+            title="Publicaciones"
+            items={ users }
+            selectionMode="none"
+            hideIndicator
+            cardClassName="w-full"
+            icon="https://i.imgur.com/82GBaWF.png"
+          />
+        </div>
       </div>
     </section>
   );

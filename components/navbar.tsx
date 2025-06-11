@@ -70,7 +70,7 @@ export const Navbar = () => {
         </NavbarBrand>
       </NavbarContent>
 
-      <NavbarContent className="flex-1 justify-center" justify="center">
+      <NavbarContent className="flex-1 justify-center hidden md:block mt-6" justify="center">
         <NavbarItem className="w-full max-w-md flex justify-center">
           { searchInput }
         </NavbarItem>
@@ -83,9 +83,6 @@ export const Navbar = () => {
       </NavbarContent>
 
       <NavbarContent className="sm:hidden basis-1 pl-4" justify="end">
-        <Link isExternal aria-label="Github" href={ siteConfig.links.github }>
-          <GithubIcon className="text-default-500" />
-        </Link>
         <NavbarMenuToggle />
       </NavbarContent>
 
