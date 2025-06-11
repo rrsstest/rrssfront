@@ -9,7 +9,6 @@ import {
   NavbarMenuItem,
   NavbarMenuToggle,
 } from "@heroui/navbar";
-import { Button } from "@heroui/button";
 import { GithubIcon, SearchIcon } from "@/components/icons";
 import { Image } from "@heroui/image";
 import { Input } from "@heroui/input";
@@ -56,41 +55,49 @@ export const Navbar = () => {
     <HeroUINavbar
       maxWidth="xl"
       position="static"
-      className="fixed top-0 left-0 w-full z-50"
+      className="fixed top-0 left-0 w-full z-50 bg-background"
     >
-      <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
+      {/* Logo */ }
+      <NavbarContent className="basis-1/5 justify-start hidden md:flex" justify="start">
         <NavbarBrand as="li" className="gap-3 max-w-fit">
           <NextLink className="flex justify-start items-center gap-1" href="/">
-            <Image
-              alt="RR SS"
-              src={ imageSrc }
-              width={ 50 }
-            />
+            <Image alt="RR SS" src={ imageSrc } width={ 50 } />
+          </NextLink>
+        </NavbarBrand>
+      </NavbarContent>
+      {/* Logo centrado en mobile */ }
+      <NavbarContent className="flex md:hidden w-full justify-center" justify="center">
+        <NavbarBrand as="li" className="gap-3 max-w-fit">
+          <NextLink className="flex justify-center items-center gap-1" href="/">
+            <Image alt="RR SS" src={ imageSrc } width={ 50 } />
           </NextLink>
         </NavbarBrand>
       </NavbarContent>
 
-      <NavbarContent className="flex-1 justify-center hidden md:block mt-6" justify="center">
+      {/* Search (desktop) */ }
+      <NavbarContent className="flex-1 justify-center hidden md:flex" justify="center">
         <NavbarItem className="w-full max-w-md flex justify-center">
           { searchInput }
         </NavbarItem>
       </NavbarContent>
 
-      <NavbarContent className="basis-1/5 sm:basis-full" justify="end">
-        <NavbarItem className="hidden md:flex">
+      {/* Perfil (desktop) */ }
+      <NavbarContent className="basis-1/5 justify-end hidden md:flex" justify="end">
+        <NavbarItem>
           <ProfileDropdown />
         </NavbarItem>
       </NavbarContent>
 
-      <NavbarContent className="sm:hidden basis-1 pl-4" justify="end">
+      {/* Menu Toggle (mobile) */ }
+      <NavbarContent className="flex md:hidden basis-1 justify-end" justify="end">
         <NavbarMenuToggle />
       </NavbarContent>
 
       <NavbarMenu>
-        { searchInput }
-        <div className="mx-4 mt-2 flex flex-col gap-2">
+        <div className="w-full flex flex-col gap-4 p-4">
+          { searchInput }
           { siteConfig.navMenuItems.map( ( item, index ) => (
-            <NavbarMenuItem key={ `${ item }-${ index }` }>
+            <NavbarMenuItem key={ `${ item.label }-${ index }` }>
               <Link
                 color={
                   index === 2
@@ -99,7 +106,7 @@ export const Navbar = () => {
                       ? "danger"
                       : "foreground"
                 }
-                href="#"
+                href={ item.href ?? "#" }
                 size="lg"
               >
                 { item.label }
@@ -109,6 +116,5 @@ export const Navbar = () => {
         </div>
       </NavbarMenu>
     </HeroUINavbar>
-
   );
 };

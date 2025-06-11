@@ -46,7 +46,6 @@ export default function Home() {
       px-2
       bg-background
     ">
-      {/* IZQUIERDA */ }
       <div className="hidden xl:flex flex-col justify-start items-end gap-8 flex-shrink-0 pt-6">
         <div className="w-[320px]">
           <GenericList
@@ -70,7 +69,6 @@ export default function Home() {
         </div>
       </div>
 
-      {/* FEED CENTRAL */ }
       <div className="flex flex-col items-center gap-8 w-full max-w-3xl mx-auto">
         <PostContainer />
         <PostContainer />
@@ -78,7 +76,6 @@ export default function Home() {
         <PostContainer />
       </div>
 
-      {/* DERECHA */ }
       <div className="hidden xl:flex flex-col justify-start items-start pt-6 flex-shrink-0">
         <div className="w-[320px]">
           <GenericList
