@@ -19,6 +19,7 @@ import NextLink from "next/link";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { ProfileDropdown } from './profile-dropdown';
+import { MessagesDropdown, NotificationsDropdown } from './notificactions';
 
 export const Navbar = () => {
   const { theme } = useTheme();
@@ -65,6 +66,7 @@ export const Navbar = () => {
           </NextLink>
         </NavbarBrand>
       </NavbarContent>
+
       {/* Logo centrado en mobile */ }
       <NavbarContent className="flex md:hidden w-full justify-center" justify="center">
         <NavbarBrand as="li" className="gap-3 max-w-fit">
@@ -83,6 +85,12 @@ export const Navbar = () => {
 
       {/* Perfil (desktop) */ }
       <NavbarContent className="basis-1/5 justify-end hidden md:flex" justify="end">
+        <NavbarItem>
+          <MessagesDropdown />
+        </NavbarItem>
+        <NavbarItem>
+          <NotificationsDropdown />
+        </NavbarItem>
         <NavbarItem>
           <ProfileDropdown />
         </NavbarItem>

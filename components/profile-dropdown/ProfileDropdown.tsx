@@ -7,7 +7,7 @@ import { ThemeSwitch } from '../theme-switch';
 
 export const ProfileDropdown = () => {
   return (
-    <Dropdown placement="bottom-start">
+    <Dropdown placement="bottom-start" className="ml-1">
       <DropdownTrigger>
         <User
           as="button"
