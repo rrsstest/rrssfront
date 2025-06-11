@@ -1,4 +1,5 @@
 import { GenericList, IUserItemList } from '@/components';
+import { PostContainer } from '@/components/posts';
 
 const users: IUserItemList[] = [
   {
@@ -33,8 +34,8 @@ const users: IUserItemList[] = [
 
 export default function Home() {
   return (
-    <section className="grid grid-cols-1 md:grid-cols-5 min-h-screen pb-4">
-      <div className="order-1 md:order-none md:col-span-1 flex flex-col gap-y-8 items-start mt-12">
+    <section className="grid grid-cols-1 md:grid-cols-7 min-h-screen pb-4 pt-4">
+      <div className="order-1 md:order-none md:col-span-2 flex flex-col gap-y-8 items-start mt-12">
         <GenericList
           title="Grupos"
           items={ users }
@@ -50,10 +51,20 @@ export default function Home() {
           cardClassName="w-full max-w-xs"
         />
       </div>
-      <div className="order-3 md:order-none md:col-span-3 flex justify-center items-start">
-        {/* Aquí podés poner el contenido principal */ }
+      <div className="order-3 md:order-none md:col-span-3 flex justify-center items-start flex-col space-y-5">
+
+        <PostContainer />
+
+        <PostContainer />
+
+        <PostContainer />
+
+        <PostContainer />
+
+        <PostContainer />
+        
       </div>
-      <div className="order-2 md:order-none md:col-span-1 flex justify-center items-start mt-12">
+      <div className="order-2 md:order-none md:col-span-2 flex justify-center items-start mt-12">
         <GenericList
           title="Publicaciones"
           items={ users }
