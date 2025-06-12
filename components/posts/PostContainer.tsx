@@ -1,73 +1,75 @@
 'use client';
 
-import { useRouter } from "next/navigation";
+import Link from 'next/link';
 import { Card, CardHeader, CardBody, CardFooter } from '@heroui/card';
 import { Image } from "@heroui/image";
-import { Divider } from '@heroui/divider';
-import { Link } from '@heroui/link';
+import { Avatar } from "@heroui/avatar";
 import { IoChatbubbleOutline, IoHeartOutline, IoShareOutline } from 'react-icons/io5';
 
-export const PostContainer = () => {
-  const router = useRouter();
+interface PostAuthor {
+  name: string;
+  handle: string;
+  avatarUrl: string;
+}
 
-  const handleNavigate = () => {
-    router.push( "/publicacion/abc123" );
-  };
+interface PostStats {
+  likes: number;
+  comments: number;
+}
 
+export interface Post {
+  id: string;
+  author: PostAuthor;
+  content: string;
+  imageUrl: string;
+  stats: PostStats;
+}
+
+interface Props {
+  post: Post;
+}
+
+export const PostContainer = ( { post }: Props ) => {
   return (
-    <Card
-      className="w-full max-w-3xl flex flex-col cursor-pointer group"
-      isBlurred
-      isPressable
-    >
-      <div
-        className="flex flex-col flex-1"
-        onClick={ handleNavigate }
-        style={ { cursor: 'pointer' } }
-        tabIndex={ 0 }
-        role="button"
-        aria-label="Ver publicación"
-      >
-        <CardHeader className="flex gap-3">
-          <Image
-            alt="heroui logo"
-            height={ 40 }
-            radius="sm"
-            src="https://avatars.githubusercontent.com/u/86160567?s=200&v=4"
-            width={ 40 }
-            isBlurred
-          />
+    <Card className="w-full transition-shadow duration-300 hover:shadow-xl bg-white/80 dark:bg-slate-900/80 p-0">
+      <Link href={ `/publicacion/${ post.id }` } className="block cursor-pointer group">
+        <CardHeader className="flex gap-4 px-6 pt-4">
+          <Avatar src={ post.author.avatarUrl } size="md" />
           <div className="flex flex-col">
-            <p className="text-md">HeroUI</p>
-            <p className="text-small text-default-500">heroui.com</p>
+            <p className="text-md font-semibold text-slate-900 dark:text-slate-100">{ post.author.name }</p>
+            <p className="text-sm text-slate-500 dark:text-slate-400">@{ post.author.handle }</p>
           </div>
         </CardHeader>
-        <Divider />
-        <div className="w-full aspect-[16/8] bg-neutral-900 flex-1 flex items-center justify-center p-0">
+        <CardBody className="px-6">
+          <p className="text-base text-slate-800 dark:text-slate-200">{ post.content }</p>
           <Image
-            isBlurred
-            alt="HeroUI Album Cover"
-            className="w-full h-full object-cover rounded-none"
-            src="https://pbs.twimg.com/media/GtBhhrMXsAAJAy6?format=jpg&name=medium"
+            alt="Contenido de la publicación"
+            className="w-full h-auto object-cover rounded-lg mt-4"
+            src={ post.imageUrl }
           />
-        </div>
-        <CardBody className="p-6 pb-2">
-          <p className="text-lg">Make beautiful websites regardless of your design experience.</p>
         </CardBody>
-      </div>
-      <Divider />
-      <CardFooter className="flex flex-row justify-start items-center space-x-3 pl-4">
-        <div className="flex flex-row space-x-2">
-          <IoHeartOutline size="24" />
-          3
-        </div>
-        <div className="flex flex-row space-x-2">
-          <IoChatbubbleOutline size="24" />
-          10
-        </div>
-        <div className="flex flex-row space-x-2">
-          <IoShareOutline size="24" />
-        </div>
+      </Link>
+      <CardFooter className="flex flex-row justify-start items-center gap-x-6 px-6 pb-4 pt-2">
+        <button
+          onClick={ ( e ) => e.stopPropagation() }
+          className="flex items-center gap-2 text-slate-600 dark:text-slate-400 transition-colors hover:text-red-500 dark:hover:text-red-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 rounded-full"
+        >
+          <IoHeartOutline className="w-6 h-6" />
+          <span className="font-semibold text-sm">{ post.stats.likes }</span>
+        </button>
+        <button
+          onClick={ ( e ) => e.stopPropagation() }
+          className="flex items-center gap-2 text-slate-600 dark:text-slate-400 transition-colors hover:text-blue-500 dark:hover:text-blue-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-full"
+        >
+          <IoChatbubbleOutline className="w-6 h-6" />
+          <span className="font-semibold text-sm">{ post.stats.comments }</span>
+        </button>
+        <button
+          onClick={ ( e ) => e.stopPropagation() }
+          className="flex items-center gap-2 text-slate-600 dark:text-slate-400 transition-colors hover:text-green-500 dark:hover:text-green-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 rounded-full"
+        >
+          <IoShareOutline className="w-6 h-6" />
+        </button>
       </CardFooter>
     </Card>
   );

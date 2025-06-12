@@ -1,3 +1,4 @@
+export * from './community';
 export * from './generic-list';
 export * from './icons';
 export * from './navbar';

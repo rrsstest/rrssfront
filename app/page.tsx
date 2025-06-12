@@ -110,10 +110,6 @@ export default function Home() {
 
       <div className="flex flex-col items-center gap-8 w-full max-w-3xl mx-auto">
         <StatusGalery />
-        <PostContainer />
-        <PostContainer />
-        <PostContainer />
-        <PostContainer />
       </div>
 
       <div className="hidden xl:flex flex-col justify-start items-start pt-6 flex-shrink-0">
