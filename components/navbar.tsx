@@ -56,7 +56,8 @@ export const Navbar = () => {
     <HeroUINavbar
       maxWidth="xl"
       position="static"
-      className="fixed top-0 left-0 w-full z-50 bg-background"
+      className="fixed top-0 left-0 w-full z-50"
+      isBlurred
     >
       {/* Logo */ }
       <NavbarContent className="basis-1/5 justify-start hidden md:flex" justify="start">

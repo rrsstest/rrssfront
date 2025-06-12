@@ -3,6 +3,7 @@ import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from '@heroui/d
 import { User } from '@heroui/user';
 
 import { ThemeSwitch } from '../theme-switch';
+import { Link } from '@heroui/link';
 
 
 export const ProfileDropdown = () => {
@@ -22,17 +23,16 @@ export const ProfileDropdown = () => {
       </DropdownTrigger>
       <DropdownMenu aria-label="User Actions" variant="flat">
         <DropdownItem key="profile" className="h-14 gap-2">
-          <p className="font-bold">Signed in as</p>
-          <p className="font-bold">@tonyreichert</p>
+          <Link href="/abc123" color="foreground">
+            <div className="flex flex-col space-x-1">
+              <h3 className="ml-2">Nate Gentile</h3>
+              <h3 className="font-bold">@tonyreichert</h3>
+            </div>
+          </Link>
         </DropdownItem>
-        <DropdownItem key="settings">My Settings</DropdownItem>
-        <DropdownItem key="team_settings">Team Settings</DropdownItem>
-        <DropdownItem key="analytics">Analytics</DropdownItem>
-        <DropdownItem key="system">System</DropdownItem>
-        <DropdownItem key="configurations">Configurations</DropdownItem>
         <DropdownItem key="help_and_feedback"><ThemeSwitch /></DropdownItem>
         <DropdownItem key="logout" color="danger">
-          Log Out
+          Cerrar sesión
         </DropdownItem>
       </DropdownMenu>
     </Dropdown>

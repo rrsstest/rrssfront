@@ -1,11 +1,14 @@
 "use client";
+
 import { Accordion, AccordionItem } from "@heroui/accordion";
 import { Avatar } from "@heroui/avatar";
 import { Card, CardBody, CardHeader } from "@heroui/card";
 import { Image } from "@heroui/image";
 import clsx from "clsx";
+import Link from "next/link";
 
 import { IGenericList } from './interfaces';
+
 
 
 export function GenericList( {
@@ -27,13 +30,14 @@ export function GenericList( {
       shadow="sm"
     >
       { title && (
-        <CardHeader className={ headerClassName ?? "flex justify-center flex-col" }>
+        <CardHeader className={ headerClassName ?? "flex justify-center flex-row items-center" }>
           <Image
             alt="heroui logo"
-            height={ 40 }
+            height={ 35 }
             radius="sm"
             src={ icon }
-            width={ 40 }
+            width={ 35 }
+            className="mt-1"
           />
           <h1 className="text-xl">{ title }</h1>
         </CardHeader>
@@ -53,19 +57,27 @@ export function GenericList( {
               aria-label={ typeof item.title === "string" ? item.title : undefined }
               startContent={
                 item.avatarSrc ? (
-                  <Avatar
-                    isBordered
-                    color={ item.avatarColor ?? "default" }
-                    radius="lg"
-                    src={ item.avatarSrc }
-                  />
+                  <Link href="/comunidad/abc123">
+                    <Avatar
+                      isBordered
+                      color={ item.avatarColor ?? "default" }
+                      radius="lg"
+                      src={ item.avatarSrc }
+                    />
+                  </Link>
                 ) : undefined
               }
-              title={ item.title }
-              subtitle={ item.subtitle }
-              className={ clsx( accordionItemClassName, item.className ) }
+              title={ <Link href="/comunidad/abc123">item.title</Link> }
+              subtitle={ <Link href="/comunidad/abc123">item.subtitle</Link> }
+              className={ clsx( accordionItemClassName, item.className, item.href && "cursor-pointer" ) }
             >
-              { item.content }
+              { item.href ? (
+                <Link href="/comunidad/abc123" className="block w-full h-full" >
+                  { item.content }
+                </Link>
+              ) : (
+                item.content
+              ) }
             </AccordionItem>
           ) ) }
         </Accordion>

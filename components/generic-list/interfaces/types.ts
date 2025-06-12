@@ -8,17 +8,18 @@ export interface IUserItemList {
   subtitle?:       ReactNode;
   content?:        ReactNode;
   avatarColor?:    "primary" | "success" | "warning" | "default" | "danger" | "secondary";
+  href?:           string;
 }
 
 export interface IGenericList {
-  accordionClassName?:    string;
-  accordionItemClassName?:string;
-  bodyClassName?:         string;
-  cardClassName?:         string;
-  headerClassName?:       string;
-  icon:                   string;
-  hideIndicator?:         boolean;
-  title?:                 ReactNode;
-  items:                  IUserItemList[];
-  selectionMode?:         "single" | "multiple" | "none";
+  cardClassName?:          string;
+  headerClassName?:        string;
+  bodyClassName?:          string;
+  accordionClassName?:     string;
+  accordionItemClassName?: string;
+  hideIndicator?:          boolean;
+  title?:                  ReactNode;
+  items:                   IUserItemList[];
+  selectionMode?:          "single" | "multiple" | "none";
+  icon?:                   string;
 }

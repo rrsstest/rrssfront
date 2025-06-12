@@ -1,7 +1,7 @@
-import { GenericList, IUserItemList } from '@/components';
+import { GenericList, IUserItemList, StatusGalery } from '@/components';
 import { PostContainer } from '@/components/posts';
 
-const users: IUserItemList[] = [
+const grupos: IUserItemList[] = [
   {
     key: 1,
     title: "Chung Miller",
@@ -9,6 +9,7 @@ const users: IUserItemList[] = [
     avatarSrc: "https://i.pravatar.cc/150?u=a042581f4e29026024d",
     avatarColor: "primary",
     content: "Contenido adicional (opcional)",
+    href: "/comunidad/comunidad-1"
   },
   {
     key: 2,
@@ -17,6 +18,7 @@ const users: IUserItemList[] = [
     avatarSrc: "https://i.pravatar.cc/150?u=a042581f4e29026704d",
     avatarColor: "success",
     content: "Otro contenido...",
+    href: "/comunidad/comunidad-2"
   },
   {
     key: 3,
@@ -29,6 +31,41 @@ const users: IUserItemList[] = [
     avatarSrc: "https://i.pravatar.cc/150?u=a04258114e29026702d",
     avatarColor: "warning",
     content: "Detalles extra para Zoey",
+    href: "/comunidad/comunidad-3"
+  },
+];
+
+const publicaciones: IUserItemList[] = [
+  {
+    key: 1,
+    title: "Chung Miller",
+    subtitle: "4 mensajes sin leer",
+    avatarSrc: "https://i.pravatar.cc/150?u=a042581f4e29026024d",
+    avatarColor: "primary",
+    content: "Contenido adicional (opcional)",
+    href: "/publicacion/publicacion-1"
+  },
+  {
+    key: 2,
+    title: "Janelle Lenard",
+    subtitle: "3 pasos incompletos",
+    avatarSrc: "https://i.pravatar.cc/150?u=a042581f4e29026704d",
+    avatarColor: "success",
+    content: "Otro contenido...",
+    href: "/publicacion/publicacion-2"
+  },
+  {
+    key: 3,
+    title: "Zoey Lang",
+    subtitle: (
+      <p className="flex">
+        2 problemas por<span className="text-primary ml-1">resolver ahora</span>
+      </p>
+    ),
+    avatarSrc: "https://i.pravatar.cc/150?u=a04258114e29026702d",
+    avatarColor: "warning",
+    content: "Detalles extra para Zoey",
+    href: "/publicacion/publicacion-3"
   },
 ];
 
@@ -50,7 +87,7 @@ export default function Home() {
         <div className="w-[320px]">
           <GenericList
             title="Grupos"
-            items={ users }
+            items={ grupos }
             selectionMode="none"
             hideIndicator
             cardClassName="w-full"
@@ -60,7 +97,7 @@ export default function Home() {
         <div className="w-[320px]">
           <GenericList
             title="Grupos explorados"
-            items={ users }
+            items={ grupos }
             selectionMode="none"
             hideIndicator
             cardClassName="w-full"
@@ -70,6 +107,7 @@ export default function Home() {
       </div>
 
       <div className="flex flex-col items-center gap-8 w-full max-w-3xl mx-auto">
+        <StatusGalery />
         <PostContainer />
         <PostContainer />
         <PostContainer />
@@ -80,7 +118,7 @@ export default function Home() {
         <div className="w-[320px]">
           <GenericList
             title="Publicaciones"
-            items={ users }
+            items={ publicaciones }
             selectionMode="none"
             hideIndicator
             cardClassName="w-full"
