@@ -1,5 +1,7 @@
 import { Avatar } from '@heroui/avatar';
+import { Button } from '@heroui/button';
 import { Image } from '@heroui/image';
+import { IoPersonAddOutline } from 'react-icons/io5';
 
 interface Props {
   username: string;
@@ -15,7 +17,7 @@ export const UserCoverAndProfilePhotos = ( {
   description = "Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam excepturi reprehenderit explicabo sapiente nihil minus quidem in architecto! Explicabo debitis aspernatur molestiae quas molestias nam ut distinctio ad adipisci exercitationem!",
 }: Props ) => {
   return (
-    <div className="w-full flex flex-col items-center mt-8 mb-14">
+    <div className="w-full flex flex-col items-center mt-8 mb-14 p-3 md:p-0">
       <div className="relative w-full flex justify-center">
         <Image
           isBlurred
@@ -35,8 +37,11 @@ export const UserCoverAndProfilePhotos = ( {
             flex-col
             items-center
             w-full
+            pt-12
+            md:pt-8
           "
         >
+          <div className="pt-8 md:hidde"></div>
           <Avatar
             isBordered
             color="secondary"
@@ -53,6 +58,7 @@ export const UserCoverAndProfilePhotos = ( {
           />
           <div className="mt-4 flex flex-col items-center">
             <span className="text-3xl font-bold text-foreground">{ username }</span>
+            <Button className="mt-1" color="primary" startContent={ <IoPersonAddOutline size="18" /> }>Seguir</Button>
             <p className="
               mt-2
               text-base
@@ -68,7 +74,7 @@ export const UserCoverAndProfilePhotos = ( {
           </div>
         </div>
       </div>
-      <div className="h-32" />
+      <div className="h-32 mt-10 md:mt-4" />
     </div>
   );
 };
