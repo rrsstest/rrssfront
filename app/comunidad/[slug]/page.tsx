@@ -13,17 +13,21 @@ export async function generateMetadata( { params }: Props ): Promise<Metadata> {
 }
 
 export default async function ComunidadPage( { params }: Props ) {
+
   const resolvedParams = await params;
 
   return (
     <section className="flex flex-col items-center justify-center min-h-screen">
+
       <h1 className="text-3xl font-bold">
         Comunidad : { resolvedParams.slug }
       </h1>
+
       <p className="mt-4 text-lg text-default-500">
         Esta es la página para la comunidad{ " " }
         <span className="font-semibold text-primary">{ resolvedParams.slug }</span>
       </p>
+      
     </section>
   );
 }
