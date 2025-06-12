@@ -5,20 +5,24 @@ interface Props {
 }
 
 export async function generateMetadata( { params }: Props ): Promise<Metadata> {
+  const resolvedParams = await params;
   return {
-    title: params.slug,
-    description: `Detalle de la publicación: ${ params.slug }`,
+    title: resolvedParams.slug,
+    description: `Detalle de la comunidad: ${ resolvedParams.slug }`,
   };
 }
 
-export default function PublicacionPage( { params }: Props ) {
+export default async function ComunidadPage( { params }: Props ) {
+  const resolvedParams = await params;
+
   return (
     <section className="flex flex-col items-center justify-center min-h-screen">
       <h1 className="text-3xl font-bold">
-        Comunidad : { params.slug }
+        Comunidad : { resolvedParams.slug }
       </h1>
       <p className="mt-4 text-lg text-default-500">
-        Esta es la página para la comunidad <span className="font-semibold text-primary">{ params.slug }</span>
+        Esta es la página para la comunidad{ " " }
+        <span className="font-semibold text-primary">{ resolvedParams.slug }</span>
       </p>
     </section>
   );
