@@ -34,6 +34,7 @@ export const PostContainer = () => {
             radius="sm"
             src="https://avatars.githubusercontent.com/u/86160567?s=200&v=4"
             width={ 40 }
+            isBlurred
           />
           <div className="flex flex-col">
             <p className="text-md">HeroUI</p>
