@@ -7,6 +7,7 @@ import { IoChatboxOutline, IoImagesOutline } from 'react-icons/io5';
 import { VideoIcon } from '../icons';
 import { Card, CardBody, CardHeader } from '@heroui/card';
 import { PostContainer } from '../posts';
+import { PhotosGallery } from '../photos-gallery';
 
 export const UserContent = () => {
   return (
@@ -48,14 +49,7 @@ export const UserContent = () => {
               </div>
             }
           >
-            <Card className="w-full max-w-xl mx-auto mt-8">
-              <CardHeader>
-                Fotos
-              </CardHeader>
-              <CardBody>
-                Galería de fotos...
-              </CardBody>
-            </Card>
+            <PhotosGallery />
           </Tab>
           <Tab
             key="videos"

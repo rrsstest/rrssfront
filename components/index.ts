@@ -1,6 +1,7 @@
 export * from './generic-list';
 export * from './icons';
 export * from './navbar';
+export * from './photos-gallery';
 export * from './primitives';
 export * from './profile-dropdown';
 export * from './status-galery';
