@@ -1,25 +1,30 @@
 import type { Metadata } from "next";
 
+import { UserProfile } from '@/components';
+
+
+
 interface Props {
   params: { username: string; };
 }
 
 export async function generateMetadata( { params }: Props ): Promise<Metadata> {
+  const resolvedParams = await params;
   return {
-    title: params.username,
-    description: `Perfil de ${ params.username }`,
+    title: resolvedParams.username,
+    description: `Perfil de ${ resolvedParams.username }`,
   };
 }
 
-export default function UserProfilePage( { params }: Props ) {
+
+export default async function UserProfilePage( { params }: Props ) {
+
+  const resolvedParams = await params;
+  const { username } = resolvedParams;
+
   return (
-    <section className="flex flex-col items-center justify-center min-h-screen">
-      <h1 className="text-3xl font-bold">
-        Perfil de { params.username }
-      </h1>
-      <p className="mt-4 text-lg text-default-500">
-        Esta es la página de usuario para <span className="font-semibold text-primary">{ params.username }</span>
-      </p>
+    <section className="w-full">
+      <UserProfile username={ username } />
     </section>
   );
 }
