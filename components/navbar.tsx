@@ -1,5 +1,5 @@
 "use client";
-
+import { useEffect, useState } from "react";
 import {
   Navbar as HeroUINavbar,
   NavbarBrand,
@@ -9,18 +9,20 @@ import {
   NavbarMenuItem,
   NavbarMenuToggle,
 } from "@heroui/navbar";
-import { GithubIcon, SearchIcon } from "@/components/icons";
 import { Image } from "@heroui/image";
 import { Input } from "@heroui/input";
 import { Link } from "@heroui/link";
-import { siteConfig } from "@/config/site";
 import NextLink from "next/link";
 import { useTheme } from "next-themes";
-import { useEffect, useState } from "react";
+
+import { siteConfig } from "@/config/site";
 import { ProfileDropdown } from './profile-dropdown';
+import { SearchIcon } from "@/components/icons";
 import { MessagesDropdown, NotificationsDropdown } from './notificactions';
 
+
 export const Navbar = () => {
+  
   const { theme } = useTheme();
   const [ mounted, setMounted ] = useState( false );
 
@@ -58,7 +60,6 @@ export const Navbar = () => {
       className="fixed top-0 left-0 w-full z-50"
       isBlurred
     >
-      {/* Logo desktop */ }
       <NavbarContent className="basis-1/5 justify-start hidden md:flex" justify="start">
         <NavbarBrand as="li" className="gap-3 max-w-fit">
           <NextLink className="flex justify-start items-center gap-1" href="/">
@@ -67,7 +68,6 @@ export const Navbar = () => {
         </NavbarBrand>
       </NavbarContent>
 
-      {/* Mobile: logo absolutamente perfecto arriba y centrado */ }
       <div className="w-full flex md:hidden items-center h-16">
         <div className="flex-1" />
         <div className="flex items-center justify-center">
@@ -82,14 +82,12 @@ export const Navbar = () => {
         </div>
       </div>
 
-      {/* Search (desktop) */ }
       <NavbarContent className="flex-1 justify-center hidden md:flex" justify="center">
         <NavbarItem className="w-full max-w-md flex justify-center">
           { searchInput }
         </NavbarItem>
       </NavbarContent>
 
-      {/* Perfil (desktop) */ }
       <NavbarContent className="basis-1/5 justify-end hidden md:flex" justify="end">
         <NavbarItem>
           <MessagesDropdown />
@@ -102,7 +100,6 @@ export const Navbar = () => {
         </NavbarItem>
       </NavbarContent>
 
-      {/* Menú mobile (invisible porque lo maneja el toggle arriba) */ }
       <div className="hidden">
         <NavbarMenu>
           <div className="w-full flex flex-col gap-4 p-4">
