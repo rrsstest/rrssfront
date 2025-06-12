@@ -5,6 +5,7 @@ import { Card, CardHeader, CardBody, CardFooter } from '@heroui/card';
 import { Image } from "@heroui/image";
 import { Divider } from '@heroui/divider';
 import { Link } from '@heroui/link';
+import { IoChatbubbleOutline, IoHeartOutline, IoShareOutline } from 'react-icons/io5';
 
 export const PostContainer = () => {
   const router = useRouter();
@@ -55,10 +56,18 @@ export const PostContainer = () => {
         </CardBody>
       </div>
       <Divider />
-      <CardFooter>
-        <Link isExternal showAnchorIcon href="https://github.com/heroui-inc/heroui">
-          Visit source code on GitHub.
-        </Link>
+      <CardFooter className="flex flex-row justify-start items-center space-x-3 pl-4">
+        <div className="flex flex-row space-x-2">
+          <IoHeartOutline size="24" />
+          3
+        </div>
+        <div className="flex flex-row space-x-2">
+          <IoChatbubbleOutline size="24" />
+          10
+        </div>
+        <div className="flex flex-row space-x-2">
+          <IoShareOutline size="24" />
+        </div>
       </CardFooter>
     </Card>
   );

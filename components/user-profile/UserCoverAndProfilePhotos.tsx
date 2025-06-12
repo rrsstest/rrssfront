@@ -1,6 +1,8 @@
 import { Avatar } from '@heroui/avatar';
 import { Image } from '@heroui/image';
 
+
+
 interface Props {
   username: string;
   avatarUrl: string;
@@ -13,16 +15,15 @@ export const UserCoverAndProfilePhotos = ( {
   coverUrl,
 }: Props ) => {
   return (
-    <div className="w-full  mt-5">
+    <div className="w-full  mt-6">
       <div className="w-full px-4">
         <div className="relative flex justify-center">
           <Image
             isBlurred
             alt="Portada usuario"
-            className="w-[1500px] h-[450px]"
+            className="w-[1300px] h-[450px]"
             src={ coverUrl }
           />
-
           <div className="absolute -bottom-20 z-20">
             <Avatar
               isBordered
@@ -45,7 +46,6 @@ export const UserCoverAndProfilePhotos = ( {
             </div>
           </div>
         </div>
-
 
       </div>
     </div>

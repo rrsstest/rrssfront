@@ -71,18 +71,20 @@ const publicaciones: IUserItemList[] = [
 
 export default function Home() {
   return (
-    <section className="
-      flex
-      justify-center
-      w-full
-      min-h-screen
-      pt-8
-      pb-8
-      gap-10
-      xl:gap-16
-      px-2
-      bg-background
-    ">
+    <section
+      className="
+        flex
+        justify-center
+        min-h-screen
+        pt-8
+        pb-8
+        gap-10
+        xl:gap-16
+        max-w-7xl
+        mx-auto
+        w-full
+      "
+    >
       <div className="hidden xl:flex flex-col justify-start items-end gap-8 flex-shrink-0 pt-6">
         <div className="w-[320px]">
           <GenericList

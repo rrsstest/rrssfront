@@ -24,7 +24,10 @@ export default async function UserProfilePage( { params }: Props ) {
 
   return (
     <section className="w-full">
+
       <UserProfile username={ username } />
+
+      
     </section>
   );
 }
