@@ -1,6 +1,6 @@
 "use client";
 
-import { FC } from "react";
+import { FC, ReactNode } from "react";
 import { VisuallyHidden } from "@react-aria/visually-hidden";
 import { SwitchProps, useSwitch } from "@heroui/switch";
 import { useTheme } from "next-themes";
@@ -12,16 +12,17 @@ import { SunFilledIcon, MoonFilledIcon } from "@/components/icons";
 export interface ThemeSwitchProps {
   className?: string;
   classNames?: SwitchProps[ "classNames" ];
+  children?: ReactNode;
 }
 
 export const ThemeSwitch: FC<ThemeSwitchProps> = ( {
   className,
   classNames,
+  children,
 } ) => {
   const { theme, setTheme } = useTheme();
   const isSSR = useIsSSR();
 
-  // Chequeo de SSR y estado actual de tema
   const isLight = theme === "light" || isSSR;
 
   const onChange = () => {
@@ -36,7 +37,7 @@ export const ThemeSwitch: FC<ThemeSwitchProps> = ( {
     getInputProps,
     getWrapperProps,
   } = useSwitch( {
-    isSelected: isLight,
+    isSelected: !isLight,
     "aria-label": `Switch to ${ isLight ? "dark" : "light" } mode`,
     onChange,
   } );
@@ -45,7 +46,7 @@ export const ThemeSwitch: FC<ThemeSwitchProps> = ( {
     <Component
       { ...getBaseProps( {
         className: clsx(
-          "px-px transition-opacity hover:opacity-80 cursor-pointer",
+          "w-full px-3 py-1.5 transition-opacity hover:opacity-80 cursor-pointer",
           className,
           classNames?.base,
         ),
@@ -59,31 +60,19 @@ export const ThemeSwitch: FC<ThemeSwitchProps> = ( {
         className={ slots.wrapper( {
           class: clsx(
             [
-              "w-auto h-auto",
+              "w-full h-auto",
               "bg-transparent",
               "rounded-lg",
-              "flex items-center justify-center gap-2",
+              "flex items-center justify-between gap-2",
               "group-data-[selected=true]:bg-transparent",
               "!text-default-500",
-              "pt-px",
-              "px-0",
-              "mx-0",
             ],
             classNames?.wrapper,
           ),
         } ) }
       >
-        { !isLight ? (
-          <>
-            <SunFilledIcon size={ 22 } />
-            <span className="select-none text-sm font-medium cursor-pointer">Tema claro</span>
-          </>
-        ) : (
-          <>
-            <MoonFilledIcon size={ 22 } />
-            <span className="select-none text-sm font-medium cursor-pointer">Tema oscuro</span>
-          </>
-        ) }
+        { children }
+        { isSelected ? <SunFilledIcon size={ 22 } /> : <MoonFilledIcon size={ 22 } /> }
       </div>
     </Component>
   );
