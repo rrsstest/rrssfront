@@ -361,6 +361,26 @@
     "@react-types/menu" "3.10.2"
     "@react-types/shared" "3.30.0"
 
+"@heroui/modal@^2.2.18":
+  version "2.2.18"
+  resolved "https://registry.npmjs.org/@heroui/modal/-/modal-2.2.18.tgz"
+  integrity sha512-fXv/l8kiMZbeDNNuBngVy7yJl3VxLjJP1OFwU7TVmGRjly7uMnV4MLyIzu72Umqg7blDWtmtrZC3XYrttUNA3Q==
+  dependencies:
+    "@heroui/dom-animation" "2.1.9"
+    "@heroui/framer-utils" "2.1.17"
+    "@heroui/react-utils" "2.1.11"
+    "@heroui/shared-icons" "2.1.9"
+    "@heroui/shared-utils" "2.1.9"
+    "@heroui/use-aria-button" "2.2.15"
+    "@heroui/use-aria-modal-overlay" "2.2.14"
+    "@heroui/use-disclosure" "2.2.13"
+    "@heroui/use-draggable" "2.1.13"
+    "@react-aria/dialog" "3.5.26"
+    "@react-aria/focus" "3.20.4"
+    "@react-aria/overlays" "3.27.2"
+    "@react-aria/utils" "3.29.1"
+    "@react-stately/overlays" "3.6.17"
+
 "@heroui/navbar@2.2.19":
   version "2.2.19"
   resolved "https://registry.npmjs.org/@heroui/navbar/-/navbar-2.2.19.tgz"
@@ -570,10 +590,42 @@
     "@react-types/link" "3.6.2"
     "@react-types/shared" "3.30.0"
 
+"@heroui/use-aria-modal-overlay@2.2.14":
+  version "2.2.14"
+  resolved "https://registry.npmjs.org/@heroui/use-aria-modal-overlay/-/use-aria-modal-overlay-2.2.14.tgz"
+  integrity sha512-MvYYPPcuJvh29PRF15TeJSSKJSFLsNdcq6VZSz9ixy1UPp2+rFK2ZH6o7o5s8K/TXa5/ZzaqF2v1cARMafig8A==
+  dependencies:
+    "@react-aria/overlays" "3.27.2"
+    "@react-aria/utils" "3.29.1"
+    "@react-stately/overlays" "3.6.17"
+
+"@heroui/use-callback-ref@2.1.7":
+  version "2.1.7"
+  resolved "https://registry.npmjs.org/@heroui/use-callback-ref/-/use-callback-ref-2.1.7.tgz"
+  integrity sha512-AKMb+zV8um9y7gnsPgmVPm5WRx0oJc/3XU+banr8qla27+3HhnQZVqk3nlSHIplkseQzMRt3xHj5RPnwKbs71w==
+  dependencies:
+    "@heroui/use-safe-layout-effect" "2.1.7"
+
 "@heroui/use-clipboard@2.1.8":
   version "2.1.8"
   resolved "https://registry.npmjs.org/@heroui/use-clipboard/-/use-clipboard-2.1.8.tgz"
   integrity sha512-itT5PCoMRoa6rjV51Z9wxeDQpSYMZj2sDFYrM7anGFO/4CAsQ/NfQoPwl5+kX0guqCcCGMqgFnNzNyQuNNsPtg==
+
+"@heroui/use-disclosure@2.2.13":
+  version "2.2.13"
+  resolved "https://registry.npmjs.org/@heroui/use-disclosure/-/use-disclosure-2.2.13.tgz"
+  integrity sha512-Cj4oQtqEWmNOIyR7w3jaV9VfloVZxs+LcnqhmYfbFV8nrEQawDopTJYOGKpq75Eds97nEqMYSsXAYsITwra5jA==
+  dependencies:
+    "@heroui/use-callback-ref" "2.1.7"
+    "@react-aria/utils" "3.29.1"
+    "@react-stately/utils" "3.10.7"
+
+"@heroui/use-draggable@2.1.13":
+  version "2.1.13"
+  resolved "https://registry.npmjs.org/@heroui/use-draggable/-/use-draggable-2.1.13.tgz"
+  integrity sha512-jorqBTOfYP8X+fzwYl+5p//903zI6PdPb69sNla2nIy60tzSmft7fU7hxvz3tAS8vUIui/sQS2N1WxdcWPaxAA==
+  dependencies:
+    "@react-aria/interactions" "3.25.2"
 
 "@heroui/use-image@2.1.10":
   version "2.1.10"

@@ -1,86 +1,73 @@
 "use client";
 
-import { Accordion, AccordionItem } from "@heroui/accordion";
-import { Avatar } from "@heroui/avatar";
 import { Card, CardBody, CardHeader } from "@heroui/card";
-import { Image } from "@heroui/image";
-import clsx from "clsx";
+import { Avatar } from "@heroui/avatar";
 import Link from "next/link";
+import { ReactNode } from "react";
 
-import { IGenericList } from './interfaces';
+import { IGenericList, IUserItemList } from './interfaces';
 
+const ListItem = ( { item }: { item: IUserItemList; } ) => {
+  const content = (
+    <div className="flex items-center gap-4 w-full">
+      { item.avatarSrc && (
+        <Avatar
+          radius="lg"
+          src={ item.avatarSrc }
+          className="flex-shrink-0"
+        />
+      ) }
+      <div className="flex flex-col flex-grow truncate">
+        <div className="font-semibold text-slate-800 dark:text-slate-200 truncate">{ item.title }</div>
+        { item.subtitle && <div className="text-sm text-slate-500 dark:text-slate-400 truncate">{ item.subtitle }</div> }
+      </div>
+    </div>
+  );
 
+  if ( item.href ) {
+    return (
+      <Link
+        href={ item.href }
+        className="block p-3 rounded-lg transition-colors hover:bg-slate-200/60 dark:hover:bg-slate-700/60"
+      >
+        { content }
+      </Link>
+    );
+  }
+
+  return <div className="p-3">{ content }</div>;
+};
 
 export function GenericList( {
   cardClassName,
   headerClassName,
   bodyClassName,
-  accordionClassName,
-  accordionItemClassName,
-  hideIndicator = true,
   title = "Lista",
   items,
-  selectionMode = "none",
-  icon = ""
+  icon = null
 }: IGenericList ) {
   return (
     <Card
       isBlurred
-      className={ cardClassName ?? "border-none bg-background/60 dark:bg-default-100/50 max-w-[610px]" }
+      className={ cardClassName ?? "border-none bg-white/70 dark:bg-slate-900/70" }
       shadow="sm"
     >
       { title && (
-        <CardHeader className={ headerClassName ?? "flex justify-center flex-row items-center" }>
-          <Image
-            alt="heroui logo"
-            height={ 35 }
-            radius="sm"
-            src={ icon }
-            width={ 35 }
-            className="mt-1"
-          />
-          <h1 className="text-xl">{ title }</h1>
+        <CardHeader className={ headerClassName ?? "flex justify-center items-center gap-3 p-4" }>
+          { icon && (
+            <div className="text-slate-900 dark:text-slate-100 w-7 h-7">
+              { icon }
+            </div>
+          ) }
+          <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100">{ title }</h2>
         </CardHeader>
       ) }
-
-      <CardBody className={ bodyClassName }>
-        <Accordion
-          selectionMode={ selectionMode }
-          className={ accordionClassName }
-          itemClasses={ {
-            indicator: hideIndicator ? "hidden" : undefined,
-          } }
-        >
+      <CardBody className={ bodyClassName ?? "p-2" }>
+        <div className="flex flex-col gap-1">
           { items.map( ( item ) => (
-            <AccordionItem
-              key={ item.key }
-              aria-label={ typeof item.title === "string" ? item.title : undefined }
-              startContent={
-                item.avatarSrc ? (
-                  <Link href="/comunidad/abc123">
-                    <Avatar
-                      isBordered
-                      color={ item.avatarColor ?? "default" }
-                      radius="lg"
-                      src={ item.avatarSrc }
-                    />
-                  </Link>
-                ) : undefined
-              }
-              title={ <Link href="/comunidad/abc123">item.title</Link> }
-              subtitle={ <Link href="/comunidad/abc123">item.subtitle</Link> }
-              className={ clsx( accordionItemClassName, item.className, item.href && "cursor-pointer" ) }
-            >
-              { item.href ? (
-                <Link href="/comunidad/abc123" className="block w-full h-full" >
-                  { item.content }
-                </Link>
-              ) : (
-                item.content
-              ) }
-            </AccordionItem>
+            <ListItem key={ item.key } item={ item } />
           ) ) }
-        </Accordion>
+        </div>
       </CardBody>
     </Card>
   );

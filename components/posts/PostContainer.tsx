@@ -31,7 +31,7 @@ interface Props {
 
 export const PostContainer = ( { post }: Props ) => {
   return (
-    <Card className="w-full transition-shadow duration-300 hover:shadow-xl bg-white/80 dark:bg-slate-900/80 p-0">
+    <Card className="w-full h-auto transition-shadow duration-300 hover:shadow-xl bg-white/80 dark:bg-slate-900/80 p-0" >
       <Link href={ `/publicacion/${ post.id }` } className="block cursor-pointer group">
         <CardHeader className="flex gap-4 px-6 pt-4">
           <Avatar src={ post.author.avatarUrl } size="md" />

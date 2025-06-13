@@ -1,6 +1,7 @@
 import * as React from "react";
 
 import { IconSvgProps } from "@/types";
+import { SVGProps } from 'react';
 
 export const Logo: React.FC<IconSvgProps> = ( {
   size = 36,
@@ -264,3 +265,26 @@ export const VideoIcon = () => {
     </svg>
   );
 };
+
+
+export const GroupsIcon = ( props: SVGProps<SVGSVGElement> ) => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" { ...props }>
+    {/* Placeholder - Pega aquí el código de tu SVG para 'Grupos' */ }
+    <path fillRule="evenodd" d="M18.685 19.097A9.723 9.723 0 0021.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 003.065 7.097A9.716 9.716 0 0012 21.75a9.716 9.716 0 006.685-2.653zm-12.54-1.285A7.486 7.486 0 0112 15a7.486 7.486 0 015.855 2.812A8.224 8.224 0 0112 20.25a8.224 8.224 0 01-5.855-2.438zM15.75 9a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" clipRule="evenodd" />
+  </svg>
+);
+
+export const ExploreIcon = ( props: SVGProps<SVGSVGElement> ) => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" { ...props }>
+    <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
+    <path d="M9.5 16a6.471 6.471 0 004.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5-.27-.28A6.471 6.471 0 009.5 16z" opacity="0.4" />
+    <path d="M9.5 3A6.5 6.5 0 003 9.5c0 1.45.47 2.79 1.25 3.86L1.99 15.6l1.41 1.41L5.64 14.75A6.46 6.46 0 009.5 16a6.5 6.5 0 006.5-6.5h-13z" opacity="0.2" />
+  </svg>
+);
+
+export const PublicationsIcon = ( props: SVGProps<SVGSVGElement> ) => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" { ...props }>
+    {/* Placeholder - Pega aquí el código de tu SVG para 'Publicaciones' */ }
+    <path fillRule="evenodd" d="M3 6a3 3 0 013-3h12a3 3 0 013 3v12a3 3 0 01-3 3H6a3 3 0 01-3-3V6zm4.5 9.75a.75.75 0 01.75-.75h4.5a.75.75 0 010 1.5h-4.5a.75.75 0 01-.75-.75zm0-3a.75.75 0 01.75-.75h4.5a.75.75 0 010 1.5h-4.5a.75.75 0 01-.75-.75z" clipRule="evenodd" />
+  </svg>
+);
