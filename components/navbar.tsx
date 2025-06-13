@@ -89,7 +89,7 @@ export const Navbar = () => {
             <NavbarMenuToggle aria-label={ isMenuOpen ? "Close menu" : "Open menu" } />
           ) : (
             <button
-              className="flex items-center gap-2 rounded-lg bg-primary px-3 py-1.5 text-sm font-semibold text-white transition-colors hover:bg-primary/80"
+              className="flex items-center gap-2 rounded-md bg-white px-3 py-2 text-sm font-medium text-gray-700 shadow-sm transition-colors hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1"
               onClick={ () => signIn( "google", { callbackUrl: "/" } ) }
             >
               <IoLogoGoogle className="h-4 w-4" />
@@ -121,7 +121,7 @@ export const Navbar = () => {
             <ProfileDropdown />
           ) : (
             <button
-              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-primary text-white hover:bg-primary/80 font-semibold transition-colors"
+              className="flex items-center gap-2 rounded-md bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm transition-colors hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1"
               onClick={ () => signIn( "google", { callbackUrl: "/" } ) }
             >
               <IoLogoGoogle className="h-5 w-5" />
