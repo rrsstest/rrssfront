@@ -1,5 +1,9 @@
 "use client";
+
 import { useEffect, useState } from "react";
+import { Image } from "@heroui/image";
+import { Input } from "@heroui/input";
+import { Link } from "@heroui/link";
 import {
   Navbar as HeroUINavbar,
   NavbarBrand,
@@ -9,22 +13,23 @@ import {
   NavbarMenuItem,
   NavbarMenuToggle,
 } from "@heroui/navbar";
-import { Image } from "@heroui/image";
-import { Input } from "@heroui/input";
-import { Link } from "@heroui/link";
+import { useSession, signIn } from "next-auth/react";
 import NextLink from "next/link";
 import { useTheme } from "next-themes";
+import { IoLogoGoogle } from "react-icons/io5";
 
-import { siteConfig } from "@/config/site";
+import { MessagesDropdown, NotificationsDropdown } from './notificactions';
 import { ProfileDropdown } from './profile-dropdown';
 import { SearchIcon } from "@/components/icons";
-import { MessagesDropdown, NotificationsDropdown } from './notificactions';
+import { siteConfig } from "@/config/site";
 
 
 export const Navbar = () => {
-  
+
   const { theme } = useTheme();
+  const [ isMenuOpen, setIsMenuOpen ] = useState( false );
   const [ mounted, setMounted ] = useState( false );
+  const { data: session, status } = useSession();
 
   useEffect( () => {
     setMounted( true );
@@ -55,10 +60,12 @@ export const Navbar = () => {
 
   return (
     <HeroUINavbar
-      maxWidth="xl"
-      position="static"
       className="fixed top-0 left-0 w-full z-50"
       isBlurred
+      isMenuOpen={ isMenuOpen }
+      maxWidth="xl"
+      position="static"
+      onMenuOpenChange={ setIsMenuOpen }
     >
       <NavbarContent className="basis-1/5 justify-start hidden md:flex" justify="start">
         <NavbarBrand as="li" className="gap-3 max-w-fit">
@@ -77,8 +84,18 @@ export const Navbar = () => {
             </NextLink>
           </NavbarBrand>
         </div>
-        <div className="flex-1 flex justify-end">
-          <NavbarMenuToggle />
+        <div className="flex-1 flex justify-end items-center pr-2">
+          { status === "loading" ? <div /> : session?.user ? (
+            <NavbarMenuToggle aria-label={ isMenuOpen ? "Close menu" : "Open menu" } />
+          ) : (
+            <button
+              className="flex items-center gap-2 rounded-lg bg-primary px-3 py-1.5 text-sm font-semibold text-white transition-colors hover:bg-primary/80"
+              onClick={ () => signIn( "google", { callbackUrl: "/" } ) }
+            >
+              <IoLogoGoogle className="h-4 w-4" />
+              Entrar
+            </button>
+          ) }
         </div>
       </div>
 
@@ -88,15 +105,29 @@ export const Navbar = () => {
         </NavbarItem>
       </NavbarContent>
 
-      <NavbarContent className="basis-1/5 justify-end hidden md:flex" justify="end">
+      <NavbarContent className="basis-1/5 justify-end hidden md:flex items-center" justify="end">
+        { session?.user && (
+          <>
+            <NavbarItem>
+              <MessagesDropdown />
+            </NavbarItem>
+            <NavbarItem>
+              <NotificationsDropdown />
+            </NavbarItem>
+          </>
+        ) }
         <NavbarItem>
-          <MessagesDropdown />
-        </NavbarItem>
-        <NavbarItem>
-          <NotificationsDropdown />
-        </NavbarItem>
-        <NavbarItem>
-          <ProfileDropdown />
+          { status === "loading" ? null : session?.user ? (
+            <ProfileDropdown />
+          ) : (
+            <button
+              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-primary text-white hover:bg-primary/80 font-semibold transition-colors"
+              onClick={ () => signIn( "google", { callbackUrl: "/" } ) }
+            >
+              <IoLogoGoogle className="h-5 w-5" />
+              Iniciar con Google
+            </button>
+          ) }
         </NavbarItem>
       </NavbarContent>
 

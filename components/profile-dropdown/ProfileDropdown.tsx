@@ -1,53 +1,56 @@
 'use client';
 
-import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from '@heroui/dropdown';
-import { User } from '@heroui/user';
 import { Avatar } from '@heroui/avatar';
-import { ThemeSwitch } from '../theme-switch';
+import { Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from '@heroui/dropdown';
+import { User } from '@heroui/user';
+import { signOut, useSession } from 'next-auth/react';
 import { useTheme } from 'next-themes';
 import {
-  IoPersonCircleOutline,
-  IoSettingsOutline,
   IoHelpCircleOutline,
   IoLogOutOutline,
+  IoSettingsOutline,
 } from 'react-icons/io5';
 
-const mockUser = {
-  name: 'Tony Reichert',
-  handle: '@tonyreichert',
-  avatarUrl: 'https://i.pravatar.cc/150?u=a042581f4e29026024d',
-};
+import { ThemeSwitch } from '../theme-switch';
 
 export const ProfileDropdown = () => {
+
+  const { data: session } = useSession();
   const { theme } = useTheme();
   const iconClasses = "w-5 h-5 text-slate-600 dark:text-slate-400";
 
+  if ( !session?.user ) {
+    return null;
+  }
+
+  const { user } = session;
+
   return (
-    <Dropdown placement="bottom-end" className="ml-1">
+    <Dropdown className="ml-1" placement="bottom-end">
       <DropdownTrigger>
         <Avatar
-          isBordered
-          src={ mockUser.avatarUrl }
           className="transition-transform cursor-pointer"
+          isBordered
+          src={ user.image ?? undefined }
         />
       </DropdownTrigger>
       <DropdownMenu aria-label="Acciones de Perfil" variant="flat">
         <DropdownItem
-          key="profile"
-          href="/perfil"
           className="h-16 gap-3"
+          href="/perfil"
+          key="profile"
           textValue="Mi Perfil"
         >
           <User
-            name={ mockUser.name }
-            description={ mockUser.handle }
             avatarProps={ {
-              src: mockUser.avatarUrl,
+              src: user.image ?? undefined,
             } }
             classNames={ {
               name: "font-bold",
               description: "text-default-500"
             } }
+            description={ user.email ?? '' }
+            name={ user.name ?? 'Usuario' }
           />
         </DropdownItem>
 
@@ -59,7 +62,7 @@ export const ProfileDropdown = () => {
           Ayuda y Feedback
         </DropdownItem>
 
-        <DropdownItem key="theme-switch" isReadOnly className="p-0" textValue="Cambiar Tema">
+        <DropdownItem isReadOnly className="p-0" key="theme-switch" textValue="Cambiar Tema">
           <ThemeSwitch>
             <span className="text-sm text-slate-800 dark:text-slate-200">
               { theme === 'light' ? 'Cambiar a Modo Oscuro' : 'Cambiar a Modo Claro' }
@@ -68,11 +71,12 @@ export const ProfileDropdown = () => {
         </DropdownItem>
 
         <DropdownItem
-          key="logout"
-          color="danger"
-          startContent={ <IoLogOutOutline className="w-5 h-5" /> }
           className="text-danger"
+          color="danger"
+          key="logout"
+          startContent={ <IoLogOutOutline className="w-5 h-5" /> }
           textValue="Cerrar sesión"
+          onClick={ () => signOut( { callbackUrl: "/" } ) }
         >
           Cerrar sesión
         </DropdownItem>
