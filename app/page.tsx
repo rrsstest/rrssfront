@@ -1,6 +1,8 @@
 import { GenericList, IUserItemList, StatusGallery } from '@/components';
 import { ExploreIcon, GroupsIcon, PublicationsIcon } from '@/components/icons';
 import { Post, PostContainer } from '@/components/posts';
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
 
 const grupos: IUserItemList[] = [
   {
@@ -101,7 +103,11 @@ const mockPosts: Post[] = [
   },
 ];
 
-export default function Home() {
+export default async function Home() {
+
+  const session = await auth();
+  if ( !session ) redirect( "/login" );
+
   return (
     <section
       className="
