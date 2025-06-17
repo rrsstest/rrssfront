@@ -67,7 +67,7 @@ const handler = NextAuth( {
       }
 
       let userRole = await prisma.role.findUnique( { where: { name: "USER" } } );
-      
+
       if ( !userRole ) {
         userRole = await prisma.role.create( { data: { name: "USER" } } );
       }
@@ -104,6 +104,41 @@ const handler = NextAuth( {
       } );
 
       return true;
+    },
+  },
+  events: {
+    async signOut( message ) {
+      console.log( "User signed out:", message.token?.email || 'Unknown User' );
+      console.log( "Full signOut message object:", message );
+
+      // Usar message.token.email ya que es lo que está presente
+      const userEmail = message.token?.email;
+
+      if ( userEmail ) {
+        try {
+          const user = await prisma.user.findUnique( {
+            where: { email: userEmail }, // Usar el email del token
+          } );
+
+          if ( user ) {
+            await prisma.event.create( {
+              data: {
+                user: { connect: { id: user.id } },
+                type: "LOGOUT",
+                createdByType: "HUMAN",
+                createdBy: { connect: { id: user.id } },
+              },
+            } );
+            console.log( "Logout event recorded in DB for:", user.email );
+          } else {
+            console.log( "User not found in DB for email:", userEmail );
+          }
+        } catch ( error ) {
+          console.error( "Error recording logout event in DB:", error );
+        }
+      } else {
+        console.log( "No email found in signOut message for DB logging." );
+      }
     },
   },
 } );
