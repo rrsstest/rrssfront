@@ -1,2 +1,20 @@
-import { handlers } from "@/auth";
-export const { GET, POST } = handlers;
+import NextAuth from "next-auth";
+import GoogleProvider from "next-auth/providers/google";
+
+const handler = NextAuth( {
+  providers: [
+    GoogleProvider( {
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+    } ),
+  ],
+  callbacks: {
+    async signIn( { user, account, profile } ) {
+      console.log( "Email: ", user.email );
+      console.log( "Photo: ", user.image );
+      return true;
+    },
+  },
+} );
+
+export { handler as GET, handler as POST };
