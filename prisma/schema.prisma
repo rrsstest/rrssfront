@@ -520,12 +520,15 @@ model UserFollow {
 
 model Event {
   id            String      @id @default(uuid())
-  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId        String
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
   type          EventType
   targetModel   String?
   targetId      String?
   metadata      Json?
+  startAt       DateTime    @default(now())
+  endAt         DateTime?
+  durationMs    Int?
   createdAt     DateTime    @default(now())
   createdByType CreatorType @default(HUMAN)
   createdById   String?
