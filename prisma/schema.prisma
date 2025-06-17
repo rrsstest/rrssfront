@@ -1,25 +1,558 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
-generator client {
-  provider = "prisma-client-js"
-  output   = "../app/generated/prisma"
-}
-
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum RoleName {
+  USER
+  ADMIN
+  BOT
+}
+
+enum CreatorType {
+  HUMAN
+  BOT_AI
+  HUMAN_AI
+}
+
+enum CommunityRole {
+  OWNER
+  ADMIN
+  MODERATOR
+  MEMBER
+}
+
+enum MediaType {
+  PHOTO
+  VIDEO
+  AUDIO
+  OTHER
+}
+
+enum PublicationType {
+  POST
+  COMMENT
+  REPLY
+  ALBUM
+  STATE
+  MESSAGE
+}
+
+enum PublicationVisibility {
+  DRAFT
+  PUBLIC
+  FOLLOWERS_ONLY
+  PRIVATE
+}
+
+enum ReactionType {
+  DOWNVOTE
+  LIKE
+  UPVOTE
+}
+
+enum NotificationType {
+  PUBLICATION
+  COMMENT
+  REACTION
+  MENTION
+  BOOKMARK
+  SHARE
+  FOLLOW
+}
+
+enum NotificationChannel {
+  IN_APP
+  EMAIL
+  PUSH
+}
+
+enum ConversationType {
+  PRIVATE
+  PUBLIC
+}
+
+enum EventType {
+  LOGIN
+  LOGOUT
+  VIEW_PUBLICATION
+  CLICK_PUBLICATION
+  VIEW_STATE
+  CLICK_STATE
+  VIEW_COMMUNITY
+  CLICK_COMMUNITY
+  VIEW_PROFILE
+  CLICK_PROFILE
+  SUBSCRIBE_COMMUNITY
+  UNSUBSCRIBE_COMMUNITY
+  CREATE_PUBLICATION
+  UPDATE_PUBLICATION
+  DELETE_PUBLICATION
+  CREATE_COMMENT
+  REPLY_COMMENT
+  LIKE_PUBLICATION
+  UNLIKE_PUBLICATION
+  SHARE_PUBLICATION
+  BOOKMARK_PUBLICATION
+  UNBOOKMARK_PUBLICATION
+  SEND_MESSAGE
+  READ_MESSAGE
+  VIEW_NOTIFICATION
+  CLICK_NOTIFICATION
+  SEARCH_QUERY
+  VIEW_SEARCH_RESULTS
+  CLICK_SEARCH_RESULT
+}
+
+enum EmailStatus {
+  SENT
+  FAILED
+}
+
 model User {
-  id        String   @id @default(uuid())
-  email     String   @unique
-  name      String?
-  image     String?
-  status    Boolean  @default(true)
-  lastLogin DateTime @default(now())
-  createdAt DateTime @default(now())
+  id                             String                   @id @default(uuid())
+  slug                           String                   @unique
+  email                          String?                  @unique
+  status                         Boolean                  @default(true)
+  createdAt                      DateTime                 @default(now())
+  lastAccessed                   DateTime                 @default(now())
+  updatedAt                      DateTime                 @updatedAt
+  publicDescription              String?
+  aiDescription                  String?
+  createdByType                  CreatorType              @default(HUMAN)
+  createdById                    String?
+  createdBy                      User?                    @relation("UserCreatedBy", fields: [createdById], references: [id])
+  createdUsers                   User[]                   @relation("UserCreatedBy")
+  roles                          Role[]
+  createdRoles                   Role[]                   @relation("RoleCreatedBy")
+  profilePhotos                  ProfilePhoto[]
+  createdProfilePhotos           ProfilePhoto[]           @relation("ProfilePhotoCreatedBy")
+  coverPhotos                    CoverPhoto[]
+  createdCoverPhotos             CoverPhoto[]             @relation("CoverPhotoCreatedBy")
+  participants                   Participant[]            @relation("ParticipantOnUser")
+  createdParticipants            Participant[]            @relation("ParticipantCreatedBy")
+  memberships                    CommunityMember[]
+  createdCommunityMembers        CommunityMember[]        @relation("CommunityMemberCreatedBy")
+  publications                   Publication[]
+  createdPublications            Publication[]            @relation("PublicationCreatedBy")
+  reactions                      Reaction[]
+  createdReactions               Reaction[]               @relation("ReactionCreatedBy")
+  bookmarks                      Bookmark[]
+  createdBookmarks               Bookmark[]               @relation("BookmarkCreatedBy")
+  shares                         Share[]
+  createdShares                  Share[]                  @relation("ShareCreatedBy")
+  mentions                       Mention[]
+  createdMentions                Mention[]                @relation("MentionCreatedBy")
+  notifications                  Notification[]           @relation("UserNotifications")
+  actorNotifications             Notification[]
+  createdNotifications           Notification[]           @relation("NotificationCreatedBy")
+  following                      UserFollow[]             @relation("UserFollowing")
+  followers                      UserFollow[]             @relation("UserFollowers")
+  createdUserFollows             UserFollow[]             @relation("UserFollowCreatedBy")
+  events                         Event[]
+  createdEvents                  Event[]                  @relation("EventCreatedBy")
+  emailLogs                      EmailLog[]
+  createdEmailLogs               EmailLog[]               @relation("EmailLogCreatedBy")
+  ownedCommunities               Community[]              @relation("CommunityCreatedBy")
+  creatorCommunities             Community[]
+  createdConversations           Conversation[]           @relation("ConversationCreatedBy")
+  blockedPublications            PublicationBlock[]
+  createdPublicationBlocks       PublicationBlock[]       @relation("PublicationBlockCreatedBy")
+  createdMedia                   Media[]                  @relation("MediaCreatedBy")
+  notificationPreferences        NotificationPreference[]
+  createdNotificationPreferences NotificationPreference[] @relation("NotificationPrefCreatedBy")
+
+  @@index([email, status])
+  @@index([createdAt])
+}
+
+model Role {
+  id            Int         @id @default(autoincrement())
+  name          RoleName    @unique
+  aiDescription String?
+  createdByType CreatorType @default(HUMAN)
+  createdById   String?
+  createdBy     User?       @relation("RoleCreatedBy", fields: [createdById], references: [id])
+  users         User[]
+
+  @@index([name])
+}
+
+model ProfilePhoto {
+  id            String      @id @default(uuid())
+  url           String
+  isCurrent     Boolean     @default(false)
+  status        Boolean     @default(true)
+  createdAt     DateTime    @default(now())
+  lastAccessed  DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  aiDescription String?
+  createdByType CreatorType @default(HUMAN)
+  createdById   String
+  createdBy     User        @relation("ProfilePhotoCreatedBy", fields: [createdById], references: [id], onDelete: Cascade)
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId        String
+
+  @@index([userId, status])
+}
+
+model CoverPhoto {
+  id            String      @id @default(uuid())
+  url           String
+  isCurrent     Boolean     @default(false)
+  status        Boolean     @default(true)
+  createdAt     DateTime    @default(now())
+  lastAccessed  DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  aiDescription String?
+  createdByType CreatorType @default(HUMAN)
+  createdById   String
+  createdBy     User        @relation("CoverPhotoCreatedBy", fields: [createdById], references: [id], onDelete: Cascade)
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId        String
+
+  @@index([userId, status])
+}
+
+model Community {
+  id                String            @id @default(uuid())
+  slug              String            @unique
+  name              String
+  description       String?
+  publicDescription String?
+  aiDescription     String?
+  isPrivate         Boolean           @default(false)
+  coverPhotoUrl     String?
+  status            Boolean           @default(true)
+  createdAt         DateTime          @default(now())
+  lastAccessed      DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+  createdByType     CreatorType       @default(HUMAN)
+  createdById       String
+  createdBy         User              @relation("CommunityCreatedBy", fields: [createdById], references: [id])
+  creator           User              @relation(fields: [creatorId], references: [id])
+  creatorId         String
+  members           CommunityMember[]
+  publications      Publication[]
+
+  @@index([creatorId, status])
+  @@index([name, status])
+  @@index([createdAt])
+}
+
+model CommunityMember {
+  community     Community     @relation(fields: [communityId], references: [id], onDelete: Cascade)
+  communityId   String
+  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId        String
+  role          CommunityRole
+  status        Boolean       @default(true)
+  joinedAt      DateTime      @default(now())
+  lastAccessed  DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  aiDescription String?
+  createdByType CreatorType   @default(HUMAN)
+  createdById   String
+  createdBy     User          @relation("CommunityMemberCreatedBy", fields: [createdById], references: [id])
+
+  @@id([communityId, userId])
+  @@index([userId, status])
+  @@index([joinedAt])
+}
+
+model Conversation {
+  id            String           @id @default(uuid())
+  type          ConversationType @default(PUBLIC)
+  publication   Publication?
+  publicationId String?
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+  aiDescription String?
+  createdByType CreatorType      @default(HUMAN)
+  createdById   String
+  createdBy     User             @relation("ConversationCreatedBy", fields: [createdById], references: [id])
+  participants  Participant[]
+
+  @@index([type, publicationId])
+  @@index([updatedAt])
+  @@index([createdAt])
+}
+
+model Participant {
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  conversationId String
+  user           User         @relation("ParticipantOnUser", fields: [userId], references: [id], onDelete: Cascade)
+  userId         String
+  joinedAt       DateTime     @default(now())
+  lastReadAt     DateTime?
+  status         Boolean      @default(true)
+  updatedAt      DateTime     @updatedAt
+  aiDescription  String?
+  createdByType  CreatorType  @default(HUMAN)
+  createdById    String
+  createdBy      User         @relation("ParticipantCreatedBy", fields: [createdById], references: [id])
+
+  @@id([conversationId, userId])
+  @@index([userId, status, joinedAt])
+}
+
+model Publication {
+  id                String                @id @default(uuid())
+  author            User                  @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId          String
+  conversation      Conversation?         @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  conversationId    String?               @unique
+  community         Community?            @relation(fields: [communityId], references: [id], onDelete: Cascade)
+  communityId       String?
+  type              PublicationType
+  visibility        PublicationVisibility @default(PUBLIC)
+  text              String?
+  title             String?
+  publicDescription String?
+  aiDescription     String?
+  status            Boolean               @default(true)
+  createdAt         DateTime              @default(now())
+  lastAccessed      DateTime              @default(now())
+  updatedAt         DateTime              @updatedAt
+  expiresAt         DateTime?
+  path              String[]
+  attachments       Json?
+  parent            Publication?          @relation("Children", fields: [parentId], references: [id], onDelete: Cascade)
+  parentId          String?
+  children          Publication[]         @relation("Children")
+  media             Media[]
+  reactions         Reaction[]
+  bookmarks         Bookmark[]
+  shares            Share[]
+  mentions          Mention[]
+  blockedUsers      PublicationBlock[]
+  commentCount      Int                   @default(0)
+  reactionCount     Int                   @default(0)
+  shareCount        Int                   @default(0)
+  bookmarkCount     Int                   @default(0)
+  mentionCount      Int                   @default(0)
+  isFeatured        Boolean               @default(false)
+  featuredAt        DateTime?
+  createdByType     CreatorType           @default(HUMAN)
+  createdById       String
+  createdBy         User                  @relation("PublicationCreatedBy", fields: [createdById], references: [id])
+  notifications     Notification[]
+
+  @@index([authorId, status, createdAt])
+  @@index([conversationId, createdAt])
+  @@index([communityId, createdAt])
+  @@index([type, status, createdAt])
+  @@index([visibility, createdAt])
+  @@index([parentId, createdAt])
+  @@index([path], type: Gin)
+  @@index([isFeatured, featuredAt])
+}
+
+model PublicationBlock {
+  publication   Publication @relation(fields: [publicationId], references: [id], onDelete: Cascade)
+  publicationId String
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId        String
+  status        Boolean     @default(true)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  createdByType CreatorType @default(HUMAN)
+  createdById   String
+  createdBy     User        @relation("PublicationBlockCreatedBy", fields: [createdById], references: [id])
+
+  @@id([publicationId, userId])
+  @@index([userId, status, createdAt])
+}
+
+model Media {
+  id            String      @id @default(uuid())
+  publication   Publication @relation(fields: [publicationId], references: [id], onDelete: Cascade)
+  publicationId String
+  type          MediaType
+  url           String
+  status        Boolean     @default(true)
+  createdAt     DateTime    @default(now())
+  lastAccessed  DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  aiDescription String?
+  createdByType CreatorType @default(HUMAN)
+  createdById   String
+  createdBy     User        @relation("MediaCreatedBy", fields: [createdById], references: [id])
+
+  @@index([publicationId, type, status])
+  @@index([createdAt])
+}
+
+model Reaction {
+  id            String       @id @default(uuid())
+  user          User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId        String
+  publication   Publication  @relation(fields: [publicationId], references: [id], onDelete: Cascade)
+  publicationId String
+  type          ReactionType
+  status        Boolean      @default(true)
+  createdAt     DateTime     @default(now())
+  lastAccessed  DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  aiDescription String?
+  createdByType CreatorType  @default(HUMAN)
+  createdById   String
+  createdBy     User         @relation("ReactionCreatedBy", fields: [createdById], references: [id])
+
+  @@unique([userId, publicationId, type])
+  @@index([publicationId, type, status])
+  @@index([userId, createdAt])
+}
+
+model Bookmark {
+  id            String      @id @default(uuid())
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId        String
+  publication   Publication @relation(fields: [publicationId], references: [id], onDelete: Cascade)
+  publicationId String
+  status        Boolean     @default(true)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  aiDescription String?
+  createdByType CreatorType @default(HUMAN)
+  createdById   String
+  createdBy     User        @relation("BookmarkCreatedBy", fields: [createdById], references: [id])
+
+  @@unique([userId, publicationId])
+  @@index([publicationId, status, createdAt])
+}
+
+model Share {
+  id            String      @id @default(uuid())
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId        String
+  publication   Publication @relation(fields: [publicationId], references: [id], onDelete: Cascade)
+  publicationId String
+  status        Boolean     @default(true)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  aiDescription String?
+  createdByType CreatorType @default(HUMAN)
+  createdById   String
+  createdBy     User        @relation("ShareCreatedBy", fields: [createdById], references: [id])
+
+  @@unique([userId, publicationId])
+  @@index([publicationId, status, createdAt])
+}
+
+model Mention {
+  id            String      @id @default(uuid())
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId        String
+  publication   Publication @relation(fields: [publicationId], references: [id], onDelete: Cascade)
+  publicationId String
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  aiDescription String?
+  createdByType CreatorType @default(HUMAN)
+  createdById   String
+  createdBy     User        @relation("MentionCreatedBy", fields: [createdById], references: [id])
+
+  @@unique([publicationId, userId])
+  @@index([userId, createdAt])
+}
+
+model Notification {
+  id            String                @id @default(uuid())
+  receiver      User                  @relation("UserNotifications", fields: [receiverId], references: [id], onDelete: Cascade)
+  receiverId    String
+  actor         User?                 @relation(fields: [actorId], references: [id], onDelete: SetNull)
+  actorId       String?
+  type          NotificationType
+  channels      NotificationChannel[]
+  publication   Publication?          @relation(fields: [publicationId], references: [id], onDelete: SetNull)
+  publicationId String?
+  isRead        Boolean               @default(false)
+  createdAt     DateTime              @default(now())
+  updatedAt     DateTime              @updatedAt
+  readAt        DateTime?
+  aiDescription String?
+  createdByType CreatorType           @default(HUMAN)
+  createdById   String
+  createdBy     User                  @relation("NotificationCreatedBy", fields: [createdById], references: [id])
+
+  @@index([receiverId, isRead, createdAt])
+}
+
+model NotificationPreference {
+  id            String              @id @default(uuid())
+  user          User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId        String
+  type          NotificationType
+  channel       NotificationChannel
+  enabled       Boolean             @default(true)
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
+  aiDescription String?
+  createdByType CreatorType         @default(HUMAN)
+  createdById   String
+  createdBy     User                @relation("NotificationPrefCreatedBy", fields: [createdById], references: [id])
+
+  @@unique([userId, type, channel])
+}
+
+model UserFollow {
+  followerId    String
+  followingId   String
+  follower      User        @relation("UserFollowing", fields: [followerId], references: [id], onDelete: Cascade)
+  following     User        @relation("UserFollowers", fields: [followingId], references: [id], onDelete: Cascade)
+  status        Boolean     @default(true)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  aiDescription String?
+  createdByType CreatorType @default(HUMAN)
+  createdById   String
+  createdBy     User        @relation("UserFollowCreatedBy", fields: [createdById], references: [id])
+
+  @@id([followerId, followingId])
+  @@index([followingId, createdAt])
+  @@index([followerId, createdAt])
+}
+
+model Event {
+  id            String      @id @default(uuid())
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId        String
+  type          EventType
+  targetModel   String?
+  targetId      String?
+  metadata      Json?
+  createdAt     DateTime    @default(now())
+  createdByType CreatorType @default(HUMAN)
+  createdById   String?
+  createdBy     User?       @relation("EventCreatedBy", fields: [createdById], references: [id])
+
+  @@index([userId, type, createdAt])
+  @@index([targetModel, targetId, type])
+}
+
+model EmailLog {
+  id            String      @id @default(uuid())
+  to            String
+  cc            String?
+  bcc           String?
+  subject       String
+  body          String?
+  template      String?
+  status        EmailStatus @default(SENT)
+  errorMessage  String?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  createdByType CreatorType @default(HUMAN)
+  createdById   String?
+  createdBy     User?       @relation("EmailLogCreatedBy", fields: [createdById], references: [id])
+  user          User?       @relation(fields: [userId], references: [id])
+  userId        String?
+
+  @@index([createdAt, status])
+  @@index([userId])
 }
