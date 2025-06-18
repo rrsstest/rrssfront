@@ -1,33 +1,23 @@
 import type { Metadata } from "next";
-
 import { UserProfile } from '@/components';
 
-
-
-interface Props {
+interface UserProfilePageProps {
   params: { username: string; };
 }
 
-export async function generateMetadata( { params }: Props ): Promise<Metadata> {
-  const resolvedParams = await params;
+export async function generateMetadata( { params }: UserProfilePageProps ): Promise<Metadata> {
   return {
-    title: resolvedParams.username,
-    description: `Perfil de ${ resolvedParams.username }`,
+    title: params.username,
+    description: `Perfil de ${ params.username }`,
   };
 }
 
-
-export default async function UserProfilePage( { params }: Props ) {
-
-  const resolvedParams = await params;
-  const { username } = resolvedParams;
+export default function UserProfilePage( { params }: UserProfilePageProps ) {
+  const { username } = params;
 
   return (
     <section className="w-full">
-
       <UserProfile username={ username } />
-
-      
     </section>
   );
 }

@@ -1,27 +1,23 @@
 import { CommunityContainer } from '@/components';
 import type { Metadata } from "next";
 
-interface Props {
+interface ComunidadPageProps {
   params: { slug: string; };
 }
 
-export async function generateMetadata( { params }: Props ): Promise<Metadata> {
-  const resolvedParams = await params;
+export async function generateMetadata( { params }: ComunidadPageProps ): Promise<Metadata> {
   return {
-    title: resolvedParams.slug,
-    description: `Detalle de la comunidad: ${ resolvedParams.slug }`,
+    title: params.slug,
+    description: `Detalle de la comunidad: ${ params.slug }`,
   };
 }
 
-export default async function ComunidadPage( { params }: Props ) {
-
-  const { slug } = await params;
+export default function ComunidadPage( { params }: ComunidadPageProps ) {
+  const { slug } = params;
 
   return (
     <section className="flex flex-col items-center justify-center min-h-screen">
-
       <CommunityContainer communitySlug={ slug } />
-
     </section>
   );
 }
