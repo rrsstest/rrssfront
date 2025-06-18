@@ -2,7 +2,6 @@ import { GenericList, IUserItemList, StatusGallery } from '@/components';
 import { GroupsIcon, PublicationsIcon } from '@/components/icons';
 import { Post, PostContainer } from '@/components/posts';
 
-
 const grupos: IUserItemList[] = [
   {
     key: 1,
@@ -103,8 +102,6 @@ const mockPosts: Post[] = [
 ];
 
 export default function Home() {
-
-
   return (
     <section
       className="

@@ -7,8 +7,7 @@ import { Providers } from "./providers";
 import { siteConfig } from "@/config/site";
 import { fontSans } from "@/config/fonts";
 import { Navbar } from "@/components/navbar";
-
-
+import { TimeTracker } from "@/components/time-tracker";
 
 export const metadata: Metadata = {
   title: {
@@ -39,16 +38,15 @@ export default function RootLayout( {
       <body
         className={ clsx(
           "min-h-screen text-foreground bg-background font-sans antialiased",
-          fontSans.variable,
+          fontSans.variable
         ) }
         suppressHydrationWarning={ true }
       >
         <Providers themeProps={ { attribute: "class", defaultTheme: "dark" } }>
           <div className="relative flex flex-col h-screen">
             <Navbar />
-            <main className="pt-16 flex-grow">
-              { children }
-            </main>
+            <TimeTracker />
+            <main className="pt-16 flex-grow">{ children }</main>
           </div>
         </Providers>
       </body>

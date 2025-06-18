@@ -6,6 +6,8 @@ import { User } from '@heroui/user';
 import { Modal, ModalContent, ModalBody, ModalHeader, ModalFooter } from '@heroui/modal';
 import { IoChevronBack, IoChevronForward, IoClose, IoSend } from 'react-icons/io5';
 import { Input } from '@heroui/input';
+import { useTimeTrackingStore } from '@/stores/time-tracking-store';
+import { usePathname } from 'next/navigation';
 
 interface StoryUser {
   name: string;
@@ -16,7 +18,7 @@ interface Story {
   id: string;
   user: StoryUser;
   imageUrl: string;
-  duration: number; // Duración en segundos
+  duration: number;
 }
 
 const mockStories: Story[] = [
@@ -37,6 +39,10 @@ export const StatusGallery = () => {
   const scrollRef = useRef<HTMLDivElement>( null );
   const progressRef = useRef<HTMLDivElement>( null );
   const timerRef = useRef<NodeJS.Timeout>();
+
+  const setActivePath = useTimeTrackingStore( ( state ) => state.setActivePath );
+  const pathname = usePathname();
+  const virtualPathName = 'Visor de Estados';
 
   const checkScrollability = useCallback( () => {
     const el = scrollRef.current;
@@ -62,10 +68,12 @@ export const StatusGallery = () => {
   }, [ checkScrollability ] );
 
   const handleSelectStory = ( story: Story ) => {
+    setActivePath( virtualPathName );
     setSelectedStory( story );
   };
 
   const handleCloseModal = () => {
+    setActivePath( pathname );
     setSelectedStory( null );
   };
 
