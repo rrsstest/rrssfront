@@ -1,11 +1,43 @@
 import { NextResponse, NextRequest } from "next/server";
 import { PrismaClient, EventType } from "@prisma/client";
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { AuthOptions } from "next-auth";
+import GoogleProvider from "next-auth/providers/google";
 
 const prisma = new PrismaClient();
 
-const getIpFromRequest = ( request: NextRequest ): string => {
+// Bloque de AuthOptions repetido para uso local
+const authOptions: AuthOptions = {
+  providers: [
+    GoogleProvider( {
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+    } ),
+  ],
+  callbacks: {
+    async jwt( { token, user } ) {
+      if ( user ) {
+        const dbUser = await prisma.user.findUnique( {
+          where: { email: user.email! },
+        } );
+        if ( dbUser ) {
+          token.id = dbUser.id;
+          token.projectId = dbUser.projectId;
+        }
+      }
+      return token;
+    },
+    async session( { session, token } ) {
+      if ( session.user ) {
+        session.user.id = token.id as string;
+        session.user.projectId = token.projectId as string | null;
+      }
+      return session;
+    },
+  },
+};
+
+const getIp = ( request: NextRequest ) => {
   const headers = request.headers;
   const forwardedFor = headers.get( "x-forwarded-for" );
   if ( forwardedFor ) {
@@ -81,7 +113,7 @@ export async function POST( request: NextRequest ) {
       userIdToLog = session.user.id;
       projectIdToLog = session.user.projectId;
     } else {
-      const ip = getIpFromRequest( request );
+      const ip = getIp( request );
       const visitor = await getVisitorUser( ip );
       userIdToLog = visitor.id;
       projectIdToLog = visitor.projectId;

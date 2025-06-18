@@ -1,10 +1,10 @@
 import { PrismaClient } from "@prisma/client";
-import NextAuth, { AuthOptions } from "next-auth";
+import { AuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 
 const prisma = new PrismaClient();
 
-const authOptions: AuthOptions = {
+export const authOptions: AuthOptions = {
   providers: [
     GoogleProvider( {
       clientId: process.env.GOOGLE_CLIENT_ID!,
@@ -33,6 +33,8 @@ const authOptions: AuthOptions = {
     },
     async signIn( { user } ) {
       if ( !user.email ) return false;
+
+      console.log( "Datos recibidos del proveedor de Google:", user );
 
       const googlePhoto = user.image || null;
       const googleName = user.name || user.email;
@@ -222,7 +224,3 @@ const authOptions: AuthOptions = {
     },
   },
 };
-
-const handler = NextAuth( authOptions );
-
-export { handler as GET, handler as POST };
