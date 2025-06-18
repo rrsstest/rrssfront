@@ -1,29 +1,17 @@
-"use server";
-
-import { headers } from "next/headers";
-import { getServerSession } from "next-auth";
+import { NextResponse, NextRequest } from "next/server";
 import { PrismaClient, EventType } from "@prisma/client";
+import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 const prisma = new PrismaClient();
 
-interface LogViewEventPayload {
-  path: string;
-  durationSeconds: number;
-  eventType: EventType;
-}
-
-const getIp = async () => {
-  const headersList = await headers();
-  const forwardedFor = headersList.get( "x-forwarded-for" );
+const getIpFromRequest = ( request: NextRequest ): string => {
+  const headers = request.headers;
+  const forwardedFor = headers.get( "x-forwarded-for" );
   if ( forwardedFor ) {
     return forwardedFor.split( "," )[ 0 ].trim();
   }
-  const vercelForwardedFor = headersList.get( "x-vercel-forwarded-for" );
-  if ( vercelForwardedFor ) {
-    return vercelForwardedFor.split( "," )[ 0 ].trim();
-  }
-  const realIp = headersList.get( "x-real-ip" );
+  const realIp = headers.get( "x-real-ip" );
   if ( realIp ) {
     return realIp.trim();
   }
@@ -40,8 +28,7 @@ const getVisitorUser = async ( ip: string ) => {
     create: {
       slug: "system-visitors-project",
       title: "Proyecto de Visitantes",
-      description:
-        "Proyecto para agrupar usuarios y eventos anónimos basados en IP.",
+      description: "Proyecto para agrupar usuarios y eventos anónimos basados en IP.",
     },
   } );
 
@@ -75,10 +62,17 @@ const getVisitorUser = async ( ip: string ) => {
   };
 };
 
-export const logViewEvent = async ( payload: LogViewEventPayload ) => {
+export async function POST( request: NextRequest ) {
   try {
-    const session = await getServerSession( authOptions );
+    const body = await request.json();
+    const { path, durationSeconds, eventType } = body;
+    const durationMs = Math.round( durationSeconds * 1000 );
 
+    if ( durationMs <= 1000 ) {
+      return NextResponse.json( { message: "Duración muy corta, no registrada." }, { status: 200 } );
+    }
+
+    const session = await getServerSession( authOptions );
     let userIdToLog: string;
     let projectIdToLog: string;
     let userType: "HUMAN" | "SYSTEM" = "HUMAN";
@@ -87,18 +81,11 @@ export const logViewEvent = async ( payload: LogViewEventPayload ) => {
       userIdToLog = session.user.id;
       projectIdToLog = session.user.projectId;
     } else {
-      const ip = await getIp();
+      const ip = getIpFromRequest( request );
       const visitor = await getVisitorUser( ip );
       userIdToLog = visitor.id;
       projectIdToLog = visitor.projectId;
       userType = "SYSTEM";
-    }
-
-    const { path, durationSeconds, eventType } = payload;
-    const durationMs = Math.round( durationSeconds * 1000 );
-
-    if ( durationMs <= 1000 ) {
-      return;
     }
 
     const endAt = new Date();
@@ -118,7 +105,10 @@ export const logViewEvent = async ( payload: LogViewEventPayload ) => {
         createdByType: userType,
       },
     } );
+
+    return NextResponse.json( { success: true }, { status: 200 } );
   } catch ( error ) {
-    console.error( "Error al guardar el evento de visualización:", error );
+    console.error( "Error en /api/track:", error );
+    return NextResponse.json( { success: false, error: "Internal Server Error" }, { status: 500 } );
   }
-};
+}
