@@ -22,6 +22,7 @@ const handler = NextAuth( {
         include: {
           roles: true,
           profilePhotos: { where: { isCurrent: true } },
+          project: true,
         },
       } );
 
@@ -54,90 +55,147 @@ const handler = NextAuth( {
           },
         } );
 
-        await prisma.event.create( {
-          data: {
-            user: { connect: { id: existingUser.id } },
-            type: "LOGIN",
-            createdByType: "HUMAN",
-            createdBy: { connect: { id: existingUser.id } },
-          },
-        } );
+        if ( existingUser.projectId ) {
+          await prisma.event.create( {
+            data: {
+              userId: existingUser.id,
+              type: "LOGIN",
+              createdByType: "HUMAN",
+              createdById: existingUser.id,
+              projectId: existingUser.projectId,
+            },
+          } );
+        }
 
         return true;
       }
 
-      let userRole = await prisma.role.findUnique( { where: { name: "USER" } } );
+      try {
+        await prisma.$transaction( async ( tx ) => {
+          const newUser = await tx.user.create( {
+            data: {
+              slug:
+                user.email!.replace( /[@.]/g, "-" ) +
+                "-" +
+                Math.random().toString( 36 ).substring( 2, 8 ),
+              email: user.email,
+              status: true,
+              createdByType: "HUMAN",
+              lastAccessed: new Date(),
+            },
+          } );
 
-      if ( !userRole ) {
-        userRole = await prisma.role.create( { data: { name: "USER" } } );
-      }
+          const newProject = await tx.project.create( {
+            data: {
+              title: "proyecto nuevo",
+              description: "proyecto nuevo",
+              slug: "proyecto-nuevo-" + newUser.id.substring( 0, 8 ),
+              createdBy: { connect: { id: newUser.id } },
+            },
+          } );
 
-      const newUser = await prisma.user.create( {
-        data: {
-          slug: user.email.replace( /[@.]/g, "-" ) + "-" + Math.random().toString( 36 ).substring( 2, 8 ),
-          email: user.email,
-          status: true,
-          roles: { connect: { id: userRole.id } },
-          createdByType: "HUMAN",
-          lastAccessed: new Date(),
-        },
-      } );
+          let userRole = await tx.role.findFirst( {
+            where: {
+              name: "USER",
+              projectId: newProject.id,
+            },
+          } );
 
-      if ( googlePhoto ) {
-        await prisma.profilePhoto.create( {
-          data: {
-            url: googlePhoto,
-            isCurrent: true,
-            user: { connect: { id: newUser.id } },
-            createdBy: { connect: { id: newUser.id } },
-          },
+          if ( !userRole ) {
+            userRole = await tx.role.create( {
+              data: {
+                name: "USER",
+                projectId: newProject.id,
+                createdById: newUser.id,
+              },
+            } );
+          }
+
+          await tx.user.update( {
+            where: { id: newUser.id },
+            data: {
+              project: { connect: { id: newProject.id } },
+              roles: { connect: { id: userRole.id } },
+              createdBy: { connect: { id: newUser.id } },
+            },
+          } );
+
+          if ( googlePhoto ) {
+            await tx.profilePhoto.create( {
+              data: {
+                url: googlePhoto,
+                isCurrent: true,
+                user: { connect: { id: newUser.id } },
+                createdBy: { connect: { id: newUser.id } },
+              },
+            } );
+          }
+
+          await tx.event.create( {
+            data: {
+              userId: newUser.id,
+              type: "LOGIN",
+              createdByType: "HUMAN",
+              createdById: newUser.id,
+              projectId: newProject.id,
+            },
+          } );
+
+          await tx.event.create( {
+            data: {
+              userId: newUser.id,
+              type: "CREATE_PROJECT",
+              createdByType: "HUMAN",
+              createdById: newUser.id,
+              projectId: newProject.id,
+              targetModel: "Project",
+              targetId: newProject.id,
+              metadata: { action: "Initial project created for new user" },
+            },
+          } );
+
+          await tx.event.create( {
+            data: {
+              userId: newUser.id,
+              type: "CREATE_USER",
+              createdByType: "HUMAN",
+              createdById: newUser.id,
+              projectId: newProject.id,
+              targetModel: "User",
+              targetId: newUser.id,
+              metadata: { action: "New user account created" },
+            },
+          } );
         } );
+
+        return true;
+      } catch ( error ) {
+        return false;
       }
-
-      await prisma.event.create( {
-        data: {
-          user: { connect: { id: newUser.id } },
-          type: "LOGIN",
-          createdByType: "HUMAN",
-          createdBy: { connect: { id: newUser.id } },
-        },
-      } );
-
-      return true;
     },
   },
   events: {
     async signOut( message ) {
-      console.log( "User signed out:", message.token?.email || 'Unknown User' );
-      console.log( "Full signOut message object:", message );
-
-      // Usar message.token.email ya que es lo que está presente
       const userEmail = message.token?.email;
 
       if ( userEmail ) {
         try {
           const user = await prisma.user.findUnique( {
-            where: { email: userEmail }, // Usar el email del token
+            where: { email: userEmail },
           } );
 
-          if ( user ) {
+          if ( user && user.projectId ) {
             await prisma.event.create( {
               data: {
                 user: { connect: { id: user.id } },
                 type: "LOGOUT",
                 createdByType: "HUMAN",
                 createdBy: { connect: { id: user.id } },
+                project: { connect: { id: user.projectId } },
               },
             } );
-            console.log( "Logout event recorded in DB for:", user.email );
-          } else {
-            console.log( "User not found in DB for email:", userEmail );
           }
-        } catch ( error ) {
-          console.error( "Error recording logout event in DB:", error );
-        }
-      } else {
-        console.log( "No email found in signOut message for DB logging." );
+        } catch ( error ) { }
       }
     },
   },

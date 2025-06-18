@@ -79,6 +79,13 @@ enum ConversationType {
 enum EventType {
   LOGIN
   LOGOUT
+  CREATE_USER
+  CREATE_PROJECT
+  CREATE_PUBLICATION
+  UPDATE_PUBLICATION
+  DELETE_PUBLICATION
+  CREATE_COMMENT
+  REPLY_COMMENT
   VIEW_PUBLICATION
   CLICK_PUBLICATION
   VIEW_STATE
@@ -89,11 +96,6 @@ enum EventType {
   CLICK_PROFILE
   SUBSCRIBE_COMMUNITY
   UNSUBSCRIBE_COMMUNITY
-  CREATE_PUBLICATION
-  UPDATE_PUBLICATION
-  DELETE_PUBLICATION
-  CREATE_COMMENT
-  REPLY_COMMENT
   LIKE_PUBLICATION
   UNLIKE_PUBLICATION
   SHARE_PUBLICATION
@@ -113,6 +115,12 @@ enum EmailStatus {
   FAILED
 }
 
+enum ProjectStatus {
+  ACTIVE
+  ARCHIVED
+  DELETED
+}
+
 model User {
   id                             String                   @id @default(uuid())
   slug                           String                   @unique
@@ -125,6 +133,8 @@ model User {
   aiDescription                  String?
   createdByType                  CreatorType              @default(HUMAN)
   createdById                    String?
+  projectId                      String?
+  project                        Project?                 @relation(fields: [projectId], references: [id], onDelete: Cascade)
   createdBy                      User?                    @relation("UserCreatedBy", fields: [createdById], references: [id])
   createdUsers                   User[]                   @relation("UserCreatedBy")
   roles                          Role[]
@@ -165,21 +175,51 @@ model User {
   createdMedia                   Media[]                  @relation("MediaCreatedBy")
   notificationPreferences        NotificationPreference[]
   createdNotificationPreferences NotificationPreference[] @relation("NotificationPrefCreatedBy")
+  ownedProjects                  Project[]                @relation("ProjectCreatedBy")
 
   @@index([email, status])
   @@index([createdAt])
+  @@index([projectId])
+}
+
+model Project {
+  id                      String                   @id @default(uuid())
+  slug                    String                   @unique
+  title                   String
+  description             String?
+  status                  ProjectStatus            @default(ACTIVE)
+  createdAt               DateTime                 @default(now())
+  updatedAt               DateTime                 @updatedAt
+  createdById             String?
+  createdBy               User?                    @relation("ProjectCreatedBy", fields: [createdById], references: [id])
+  users                   User[]
+  roles                   Role[]
+  communities             Community[]
+  conversations           Conversation[]
+  publications            Publication[]
+  publicationBlocks       PublicationBlock[]
+  events                  Event[]
+  emailLogs               EmailLog[]
+  notifications           Notification[]
+  notificationPreferences NotificationPreference[]
+
+  @@index([createdById])
+  @@index([slug])
 }
 
 model Role {
   id            Int         @id @default(autoincrement())
-  name          RoleName    @unique
+  name          RoleName
   aiDescription String?
   createdByType CreatorType @default(HUMAN)
   createdById   String?
+  projectId     String
+  project       Project     @relation(fields: [projectId], references: [id], onDelete: Cascade)
   createdBy     User?       @relation("RoleCreatedBy", fields: [createdById], references: [id])
   users         User[]
 
-  @@index([name])
+  @@unique([name, projectId])
+  @@index([projectId])
 }
 
 model ProfilePhoto {
@@ -233,6 +273,8 @@ model Community {
   updatedAt         DateTime          @updatedAt
   createdByType     CreatorType       @default(HUMAN)
   createdById       String
+  projectId         String
+  project           Project           @relation(fields: [projectId], references: [id], onDelete: Cascade)
   createdBy         User              @relation("CommunityCreatedBy", fields: [createdById], references: [id])
   creator           User              @relation(fields: [creatorId], references: [id])
   creatorId         String
@@ -242,6 +284,7 @@ model Community {
   @@index([creatorId, status])
   @@index([name, status])
   @@index([createdAt])
+  @@index([projectId])
 }
 
 model CommunityMember {
@@ -274,12 +317,15 @@ model Conversation {
   aiDescription String?
   createdByType CreatorType      @default(HUMAN)
   createdById   String
+  projectId     String
+  project       Project          @relation(fields: [projectId], references: [id], onDelete: Cascade)
   createdBy     User             @relation("ConversationCreatedBy", fields: [createdById], references: [id])
   participants  Participant[]
 
   @@index([type, publicationId])
   @@index([updatedAt])
   @@index([createdAt])
+  @@index([projectId])
 }
 
 model Participant {
@@ -339,6 +385,8 @@ model Publication {
   featuredAt        DateTime?
   createdByType     CreatorType           @default(HUMAN)
   createdById       String
+  projectId         String
+  project           Project               @relation(fields: [projectId], references: [id], onDelete: Cascade)
   createdBy         User                  @relation("PublicationCreatedBy", fields: [createdById], references: [id])
   notifications     Notification[]
 
@@ -350,6 +398,7 @@ model Publication {
   @@index([parentId, createdAt])
   @@index([path], type: Gin)
   @@index([isFeatured, featuredAt])
+  @@index([projectId])
 }
 
 model PublicationBlock {
@@ -362,10 +411,13 @@ model PublicationBlock {
   updatedAt     DateTime    @updatedAt
   createdByType CreatorType @default(HUMAN)
   createdById   String
+  projectId     String
+  project       Project     @relation(fields: [projectId], references: [id], onDelete: Cascade)
   createdBy     User        @relation("PublicationBlockCreatedBy", fields: [createdById], references: [id])
 
   @@id([publicationId, userId])
   @@index([userId, status, createdAt])
+  @@index([projectId])
 }
 
 model Media {
@@ -478,9 +530,12 @@ model Notification {
   aiDescription String?
   createdByType CreatorType           @default(HUMAN)
   createdById   String
+  projectId     String
+  project       Project               @relation(fields: [projectId], references: [id], onDelete: Cascade)
   createdBy     User                  @relation("NotificationCreatedBy", fields: [createdById], references: [id])
 
   @@index([receiverId, isRead, createdAt])
+  @@index([projectId])
 }
 
 model NotificationPreference {
@@ -495,9 +550,12 @@ model NotificationPreference {
   aiDescription String?
   createdByType CreatorType         @default(HUMAN)
   createdById   String
+  projectId     String
+  project       Project             @relation(fields: [projectId], references: [id], onDelete: Cascade)
   createdBy     User                @relation("NotificationPrefCreatedBy", fields: [createdById], references: [id])
 
   @@unique([userId, type, channel])
+  @@index([projectId])
 }
 
 model UserFollow {
@@ -532,10 +590,13 @@ model Event {
   createdAt     DateTime    @default(now())
   createdByType CreatorType @default(HUMAN)
   createdById   String?
+  projectId     String
+  project       Project     @relation(fields: [projectId], references: [id], onDelete: Cascade)
   createdBy     User?       @relation("EventCreatedBy", fields: [createdById], references: [id])
 
   @@index([userId, type, createdAt])
   @@index([targetModel, targetId, type])
+  @@index([projectId])
 }
 
 model EmailLog {
@@ -552,10 +613,13 @@ model EmailLog {
   updatedAt     DateTime    @updatedAt
   createdByType CreatorType @default(HUMAN)
   createdById   String?
+  projectId     String
+  project       Project     @relation(fields: [projectId], references: [id], onDelete: Cascade)
   createdBy     User?       @relation("EmailLogCreatedBy", fields: [createdById], references: [id])
   user          User?       @relation(fields: [userId], references: [id])
   userId        String?
 
   @@index([createdAt, status])
   @@index([userId])
+  @@index([projectId])
 }
