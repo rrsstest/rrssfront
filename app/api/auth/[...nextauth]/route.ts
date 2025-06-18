@@ -1,10 +1,10 @@
 import { PrismaClient } from "@prisma/client";
-import NextAuth from "next-auth";
+import NextAuth, { AuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 
 const prisma = new PrismaClient();
 
-const handler = NextAuth( {
+export const authOptions: AuthOptions = {
   providers: [
     GoogleProvider( {
       clientId: process.env.GOOGLE_CLIENT_ID!,
@@ -12,6 +12,25 @@ const handler = NextAuth( {
     } ),
   ],
   callbacks: {
+    async jwt( { token, user } ) {
+      if ( user ) {
+        const dbUser = await prisma.user.findUnique( {
+          where: { email: user.email! },
+        } );
+        if ( dbUser ) {
+          token.id = dbUser.id;
+          token.projectId = dbUser.projectId;
+        }
+      }
+      return token;
+    },
+    async session( { session, token } ) {
+      if ( session.user ) {
+        session.user.id = token.id as string;
+        session.user.projectId = token.projectId as string | null;
+      }
+      return session;
+    },
     async signIn( { user } ) {
       if ( !user.email ) return false;
 
@@ -199,6 +218,8 @@ const handler = NextAuth( {
       }
     },
   },
-} );
+};
+
+const handler = NextAuth( authOptions );
 
 export { handler as GET, handler as POST };

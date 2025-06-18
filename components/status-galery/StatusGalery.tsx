@@ -25,10 +25,6 @@ const mockStories: Story[] = [
   { id: 'story-1', user: { name: 'Elena R.', avatarUrl: 'https://i.pravatar.cc/150?u=elena' }, imageUrl: 'https://images.unsplash.com/photo-1523741543342-421b6e3497d3?q=80&w=1287&auto=format&fit=crop', duration: 7 },
   { id: 'story-2', user: { name: 'Marco D.', avatarUrl: 'https://i.pravatar.cc/150?u=marco' }, imageUrl: 'https://images.unsplash.com/photo-1555066931-4365d14694dd?q=80&w=2070&auto=format&fit=crop', duration: 5 },
   { id: 'story-3', user: { name: 'Sofia C.', avatarUrl: 'https://i.pravatar.cc/150?u=sofia' }, imageUrl: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1364&auto=format&fit=crop', duration: 8 },
-  { id: 'story-4', user: { name: 'Leo M.', avatarUrl: 'https://i.pravatar.cc/150?u=leo' }, imageUrl: 'https://images.unsplash.com/photo-1543336497-2a4b574b52c0?q=80&w=1287&auto=format&fit=crop', duration: 6 },
-  { id: 'story-5', user: { name: 'Ana T.', avatarUrl: 'https://i.pravatar.cc/150?u=ana' }, imageUrl: 'https://images.unsplash.com/photo-1509343256512-d77a5cb3791b?q=80&w=1470&auto=format&fit=crop', duration: 5 },
-  { id: 'story-6', user: { name: 'David P.', avatarUrl: 'https://i.pravatar.cc/150?u=david' }, imageUrl: 'https://images.unsplash.com/photo-1520038410233-7141be7e6f97?q=80&w=1287&auto=format&fit=crop', duration: 7 },
-  { id: 'story-7', user: { name: 'Laura G.', avatarUrl: 'https://i.pravatar.cc/150?u=laura' }, imageUrl: 'https://images.unsplash.com/photo-1517142089-62e474b3ab87?q=80&w=1287&auto=format&fit=crop', duration: 6 },
 ];
 
 export const StatusGallery = () => {

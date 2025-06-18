@@ -4,6 +4,7 @@ import { useEffect, useState, useRef } from 'react';
 import { useSession } from 'next-auth/react';
 import { usePathname } from 'next/navigation';
 import { useTimeTrackingStore } from '@/stores/time-tracking-store';
+import { logViewEvent } from '@/app/actions/tracking';
 
 export const TimeTracker = () => {
   const { data: session, status } = useSession();
@@ -21,7 +22,14 @@ export const TimeTracker = () => {
     const pathBeingLeft = previousPathRef.current;
 
     if ( pathBeingLeft && pathBeingLeft !== activePath ) {
-      if ( status !== 'loading' && seconds > 0 ) {
+      if ( status === 'authenticated' && seconds > 0 ) {
+        logViewEvent( {
+          path: pathBeingLeft,
+          durationSeconds: seconds,
+        } );
+      }
+
+      if ( seconds > 0 ) {
         const pageName = pathBeingLeft === '/' ? '/ (home)' : pathBeingLeft;
         const userIdentifier = status === 'authenticated' ? `usuario ${ session?.user?.name }` : 'visitante';
         console.log( `Estuviste ${ seconds } segundos en '${ pageName }' como ${ userIdentifier }.` );
@@ -30,7 +38,8 @@ export const TimeTracker = () => {
 
     previousPathRef.current = activePath;
     setSeconds( 0 );
-  }, [ activePath ] );
+
+  }, [ activePath, status, session ] );
 
   useEffect( () => {
     if ( !activePath ) {
