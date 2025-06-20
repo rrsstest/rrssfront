@@ -19,15 +19,29 @@ const authOptions: AuthOptions = {
         } );
         if ( dbUser ) {
           token.id = dbUser.id;
-          token.projectId = dbUser.projectId;
         }
       }
       return token;
     },
     async session( { session, token } ) {
-      if ( session.user ) {
-        session.user.id = token.id as string;
-        session.user.projectId = token.projectId as string | null;
+      if ( token.id && session.user ) {
+        const dbUser = await prisma.user.findUnique( {
+          where: { id: token.id as string },
+          include: {
+            profilePhotos: {
+              where: { isCurrent: true },
+              take: 1
+            }
+          }
+        } );
+
+        if ( dbUser ) {
+          session.user.id = dbUser.id;
+          session.user.slug = dbUser.slug;
+          session.user.name = dbUser.name;
+          session.user.email = dbUser.email;
+          session.user.image = dbUser.profilePhotos[ 0 ]?.url || null;
+        }
       }
       return session;
     },
@@ -42,7 +56,6 @@ const authOptions: AuthOptions = {
         include: {
           roles: true,
           profilePhotos: { where: { isCurrent: true } },
-          project: true,
         },
       } );
 
@@ -162,32 +175,6 @@ const authOptions: AuthOptions = {
               projectId: newProject.id,
             },
           } );
-
-          await tx.event.create( {
-            data: {
-              userId: newUser.id,
-              type: "CREATE_PROJECT",
-              createdByType: "HUMAN",
-              createdById: newUser.id,
-              projectId: newProject.id,
-              targetModel: "Project",
-              targetId: newProject.id,
-              metadata: { action: "Initial project created for new user" },
-            },
-          } );
-
-          await tx.event.create( {
-            data: {
-              userId: newUser.id,
-              type: "CREATE_USER",
-              createdByType: "HUMAN",
-              createdById: newUser.id,
-              projectId: newProject.id,
-              targetModel: "User",
-              targetId: newUser.id,
-              metadata: { action: "New user account created" },
-            },
-          } );
         } );
 
         return true;
@@ -198,6 +185,7 @@ const authOptions: AuthOptions = {
   },
   events: {
     async signOut( message ) {
+      
       const userEmail = message.token?.email;
 
       if ( userEmail ) {

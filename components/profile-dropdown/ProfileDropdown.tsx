@@ -37,7 +37,7 @@ export const ProfileDropdown = () => {
       <DropdownMenu aria-label="Acciones de Perfil" variant="flat">
         <DropdownItem
           className="h-16 gap-3"
-          href="/perfil"
+          href={ `/${ user.slug }` }
           key="profile"
           textValue="Mi Perfil"
         >

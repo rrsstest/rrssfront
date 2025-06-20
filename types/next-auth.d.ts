@@ -5,6 +5,7 @@ declare module "next-auth" {
   interface Session {
     user: {
       id: string;
+      slug: string;
       projectId: string | null;
     } & DefaultSession[ "user" ];
   }

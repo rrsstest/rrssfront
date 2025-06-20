@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import { redirect } from 'next/navigation';
 import { PrismaClient } from '@prisma/client';
+
 import { UserProfile } from '@/components';
+
+
 
 const prisma = new PrismaClient();
 
