@@ -6,14 +6,16 @@ interface ComunidadPageProps {
 }
 
 export async function generateMetadata( { params }: ComunidadPageProps ): Promise<Metadata> {
+  const resolvedParams = await params;
+
   return {
-    title: params.slug,
-    description: `Detalle de la comunidad: ${ params.slug }`,
+    title: resolvedParams.slug,
+    description: `Detalle de la comunidad: ${ resolvedParams.slug }`,
   };
 }
 
-export default function ComunidadPage( { params }: ComunidadPageProps ) {
-  const { slug } = params;
+export default async function ComunidadPage( { params }: ComunidadPageProps ) {
+  const { slug } = await params;
 
   return (
     <section className="flex flex-col items-center justify-center min-h-screen">

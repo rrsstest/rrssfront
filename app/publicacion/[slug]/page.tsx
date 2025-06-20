@@ -5,21 +5,25 @@ interface PublicacionPageProps {
 }
 
 export async function generateMetadata( { params }: PublicacionPageProps ): Promise<Metadata> {
+  const resolvedParams = await params;
+
   return {
-    title: params.slug,
-    description: `Detalle de la publicación: ${ params.slug }`,
+    title: resolvedParams.slug,
+    description: `Detalle de la publicación: ${ resolvedParams.slug }`,
   };
 }
 
-export default function PublicacionPage( { params }: PublicacionPageProps ) {
+export default async function PublicacionPage( { params }: PublicacionPageProps ) {
+  const resolvedParams = await params;
+
   return (
     <section className="flex flex-col items-center justify-center min-h-screen">
       <h1 className="text-3xl font-bold">
-        Publicación: { params.slug }
+        Publicación: { resolvedParams.slug }
       </h1>
       <p className="mt-4 text-lg text-default-500">
         Esta es la página para la publicación{ " " }
-        <span className="font-semibold text-primary">{ params.slug }</span>
+        <span className="font-semibold text-primary">{ resolvedParams.slug }</span>
       </p>
     </section>
   );
