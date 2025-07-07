@@ -6,7 +6,7 @@ import GoogleProvider from "next-auth/providers/google";
 
 const prisma = new PrismaClient();
 
-// Bloque de AuthOptions repetido para uso local
+
 const authOptions: AuthOptions = {
   providers: [
     GoogleProvider( {
