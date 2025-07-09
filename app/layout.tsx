@@ -42,7 +42,7 @@ export default function RootLayout( {
         ) }
         suppressHydrationWarning={ true }
       >
-        <Providers themeProps={ { attribute: "class", defaultTheme: "dark" } }>
+        <Providers themeProps={ { attribute: "class", defaultTheme: "light" } }>
           <div className="relative flex flex-col h-screen">
             <Navbar />
             <TimeTracker />

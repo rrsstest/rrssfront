@@ -1,6 +1,7 @@
-import { GenericList, IUserItemList, StatusGallery } from '@/components';
+import { GenericList, IUserItemList, Post, PostCategoryContainer, PostContainer, StatusGallery } from '@/components';
 import { GroupsIcon, PublicationsIcon } from '@/components/icons';
-import { Post, PostContainer } from '@/components/posts';
+
+
 
 const grupos: IUserItemList[] = [
   {
@@ -122,6 +123,9 @@ export default function Home() {
     >
       <div className="hidden xl:flex flex-col justify-start items-end gap-8 flex-shrink-0 pt-6">
         <div className="w-[320px]">
+
+          <PostCategoryContainer />
+
           <GenericList
             title="Grupos"
             items={ grupos }
